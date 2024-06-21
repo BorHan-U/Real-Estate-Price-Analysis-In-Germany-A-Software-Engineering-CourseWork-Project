@@ -60,3 +60,4 @@ If you are subject to or witness unacceptable behavior, or have any other concer
 We expect all community participants (contributors and other guests) to abide by this Code of Conduct in all community venues–online and in-person–as well as in all one-on-one communications pertaining to community business.
 
 This code of conduct and its related procedures also applies to unacceptable behavior occurring outside the scope of community activities when such behavior has the potential to adversely affect the safety and well-being of community members.
+
