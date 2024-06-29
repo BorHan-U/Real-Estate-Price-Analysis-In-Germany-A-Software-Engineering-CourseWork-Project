@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+title: Real Estate Price Analysis
+message: If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Aijaz Afzaal
+    family-names: Ahmed
+    email: ahmed11@uni-potsdam.de
+    affiliation: Universität Potsdam
+  - given-names: Jayed Akbar
+    family-names: Sumon
+    email: sumon@uni-potsdam.de
+    affiliation: Universität Potsdam
+  - given-names: Md Borhan
+    family-names: Uddin
+    email: uddin2@uni-potsdam.de
+    affiliation: Universität Potsdam
+  - given-names: Mohammad
+    family-names: Hasan
+    email: hasan3@uni-potsdam.de
+    affiliation: Universität Potsdam
+  - given-names: Md Raju
+    family-names: Ahmed
+    email: ahmed10@uni-potsdam.de
+    name-particle: Md Raju
+    affiliation: Universität Potsdam
+identifiers:
+  - type: url
+    value: "https://gitup.uni-potsdam.de/sumon/real-estate-price-analysis"
+repository-code: "https://gitup.uni-potsdam.de/sumon/real-estate-price-analysis"
+keywords:
+  - project
+  - real estate
+  - python project
+  - data analysis
+license: MIT
