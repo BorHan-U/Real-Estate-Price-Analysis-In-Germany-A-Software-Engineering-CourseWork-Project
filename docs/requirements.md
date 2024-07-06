@@ -1,25 +1,24 @@
 # Functional and non-function requirements of the project "House Price Prediction"
 
 ## Functional requirements:
-1. Data Collection and Preprocessing:
-- Collects and imports the datasets.
+1. Data Collection
+- Collect data from Kaggle
+- import the datasets using Pandas.
+2. Preprocessing:
 - Handle missing data, outliers, and categorical variables.
 - Split the dataset into training and testing sets.
 
-2. Exploratory Data Analysis (EDA):
+3. Exploratory Data Analysis (EDA):
 - Provide statistical summaries of different variables.
-- Generate visualizations such as histograms, scatter plots, and correlation matrices.
-
-3. Model Development:
-- Implemented Linear Regression, Random Forest, and LightGBM models.
-- Provide a function to train these models on the training set.
+- Generate visualizations such as boxplot, heatmap, and correlation matrices.
 
 4. Model Evaluation:
 - Evaluate the models using appropriate metrics such as Mean Sqaure Error and R-Sqaured Score.
-- Compare the performance of the three models.
+- Compare the performance of the three models
 
-5. Prediction:
-- House price predictions using the best trained models.
+UML diagram:
+
+![UML diagram of the EDA](UML_diagram.png)
 
 ## Non-Functional Requirements:
 
