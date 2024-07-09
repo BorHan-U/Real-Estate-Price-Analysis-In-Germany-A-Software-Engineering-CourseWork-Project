@@ -36,3 +36,32 @@ def test_no_missing_values(capsys):
     count_null_data(data)
     captured = capsys.readouterr()
     assert captured.out.strip() == "There are no 0 value anymore!"
+
+# Tests for delete_columns_with_zero_data function
+
+
+def test_no_columns_with_zero_data():
+    """
+    Check if the function returns the correct output
+    when there are no columns with zero data
+    """
+    data = pd.DataFrame({"A": [1, 2, 3], "B": [4, 5, 6], "C": [7, 8, 9]})
+    threshold = 0
+    result = delete_columns_with_zero_data(data, threshold)
+    assert result.equals(data)
+
+
+def test_no_columns_dropped():
+    """
+    Check if the function returns the correct output
+    when there is columns to be dropped
+    """
+    data = pd.DataFrame(
+        {"col1": [1, 2, 3], "col2": [4, 5, 6], "col3": [0, 0, 0]}
+    )
+    threshold = 2
+    expected_output = data.drop(columns=["col3"])
+    assert delete_columns_with_zero_data(data, threshold).equals(
+        expected_output
+    )
+
