@@ -23,3 +23,50 @@ except ModuleNotFoundError as e:
            environment variable")
     
 
+
+def main(args):
+
+    input_file_train = args.house_pricing_train
+    data = pd.read_csv(input_file_train)
+
+    data = data.drop('Id', axis=1)
+
+    print("The shape of our dataset is: ", data.shape)
+    print()
+    data.info()
+
+    mapping = {'Ex': 5, 'Gd': 4, 'TA': 3, 'Fa': 2, 'Po': 1}
+    columns_to_map = ['GarageQual', 'GarageCond', 'PoolQC', 'FireplaceQu',
+                      'KitchenQual', 'HeatingQC', 'BsmtCond', 'BsmtQual',
+                      'ExterCond', 'ExterQual']
+    
+    for column in columns_to_map:
+        data[column] = data[column].map(mapping)
+        count_null_data(data)
+
+    columns = data.columns.tolist()
+    columns.insert(-1, 'Age')
+    data['Age'] = data['YrSold'] - data['YearBuilt']
+    columns.remove('YearBuilt')
+    columns.remove('YrSold')
+    data = data[columns]
+
+    data = data.fillna(0)
+    
+    count_null_data(data)
+
+    threshold = 900
+    data = delete_columns_with_zero_data(data, threshold)
+
+    count_null_data(data)
+
+
+if __name__ == '__main__':
+    USAGE = 'This project is about preprocessing our dataset \
+    for house pricing. therefore we need at first train.csv file \
+        to train our model, then test it using the test.csv file.'
+    parser = argparse.ArgumentParser(description=USAGE)
+    parser.add_argument('house_pricing_train', type=str,
+                        help='Path to the house_pricing train csv file')
+    args = parser.parse_args()
+    main(args)
