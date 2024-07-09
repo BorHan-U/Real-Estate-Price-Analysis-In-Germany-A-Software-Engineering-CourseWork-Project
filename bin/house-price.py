@@ -25,7 +25,8 @@ except ModuleNotFoundError as e:
 
 
 def main(args):
-
+    '''this is the main function
+    '''
     input_file_train = args.house_pricing_train
     data = pd.read_csv(input_file_train)
 
@@ -40,6 +41,7 @@ def main(args):
                       'KitchenQual', 'HeatingQC', 'BsmtCond', 'BsmtQual',
                       'ExterCond', 'ExterQual']
     
+    
     for column in columns_to_map:
         data[column] = data[column].map(mapping)
         count_null_data(data)
@@ -52,13 +54,71 @@ def main(args):
     data = data[columns]
 
     data = data.fillna(0)
-    
+
     count_null_data(data)
 
     threshold = 900
     data = delete_columns_with_zero_data(data, threshold)
 
     count_null_data(data)
+    categorical_cols, numerical_cols = separate_categorical_numerical(data)
+    print("Categorical columns:", categorical_cols)
+    print(len(categorical_cols))
+    print("Numerical columns:", numerical_cols)
+    print(len(numerical_cols))
+
+    numerical_data = data[numerical_cols].copy()
+
+    if not os.path.exists('results'):
+        os.makedirs('results')
+    plt.figure(figsize=(16, 20))
+    numerical_data.hist(bins=50, xlabelsize=8, ylabelsize=8)
+    plt.savefig('results/plot_preprocessing/numerical_data_histogram_plot.png')
+    plt.show()
+
+    column_to_delete = ['GarageQual', 'GarageCond', 'GarageYrBlt']
+    numerical_data = numerical_data.drop(column_to_delete, axis=1)
+
+    threshold_0 = 200
+    numerical_data = drop_columns_with_zero_threshold(numerical_data,
+                                                      threshold_0)
+
+    numerical_data.hist(bins=50, xlabelsize=8, ylabelsize=8)
+    plt.savefig('results/plot_preprocessing/ \
+    after_cleaning_numericalData_histogram_plot.png')
+    plt.show()
+
+    columns_to_transform = ['1stFlrSF', 'GrLivArea', 'LotArea', 'SalePrice']
+    transformed_data = apply_1_plus_log_transformation(numerical_data,
+                                                       columns_to_transform)
+
+    transformed_data.hist(bins=50, xlabelsize=8, ylabelsize=8)
+    plt.savefig('results/plot_preprocessing/ \
+        transformed_data_histogram_plot.png')
+    plt.show()
+
+    plot_boxplot(numerical_data, 'OverallQual', 'SalePrice')
+    plot_boxplot(numerical_data, 'YearRemodAdd', 'SalePrice')
+    plot_heatmaps(transformed_data)
+
+    X = transformed_data.iloc[:, :-1].values
+    y = transformed_data.iloc[:, -1].values
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,
+                                                        random_state=42)
+    print("Train set shape:", X_train.shape, y_train.shape)
+    print("Test set shape:", X_test.shape, y_test.shape)
+
+    name = ['MultipleLinearRegression', 'RandomForest', 'LGBM']
+    model = [LinearRegression, RandomForestRegressor, LGBMRegressor]
+    metrics_list = []
+
+    for i, j in zip(name, model):
+        output_name = f"yPred_yTrue_table_{i}.txt"
+        path = f"results/evaluation_model/{output_name}"
+        metrics = model_evaluation(i, j, transformed_data, path)
+        metrics_list.append(metrics)
+    metrics_df = pd.DataFrame(metrics_list)
+    print(metrics_df)
 
 
 if __name__ == '__main__':

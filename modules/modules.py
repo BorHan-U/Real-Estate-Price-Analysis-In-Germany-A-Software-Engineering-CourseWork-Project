@@ -38,6 +38,7 @@ def separate_categorical_numerical(data):
         else:
             numerical_cols.append(column)
     return categorical_cols, numerical_cols
+
 def drop_columns_with_zero_threshold(data, threshold):
     zero_counts = (data == 0).sum()
     columns_to_drop = zero_counts[zero_counts > threshold].index
@@ -98,6 +99,7 @@ def model_evaluation(name, model, data, output_file):
 
 
 def plot_boxplot(df, x_column, y_column):
+
     data = df[[x_column, y_column]]
     fig, ax = plt.subplots(figsize=(14, 9))
     sns.boxplot(x=x_column, y=y_column, data=data, ax=ax)
