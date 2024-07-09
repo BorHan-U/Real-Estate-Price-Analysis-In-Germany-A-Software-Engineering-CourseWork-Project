@@ -65,3 +65,49 @@ def test_no_columns_dropped():
         expected_output
     )
 
+# Tests for separate_categorical_numerical function
+
+
+def test_numerical_columns():
+    """
+    Check if the function returns the correct output
+    when there are only numerical columns
+    """
+    data = pd.DataFrame({"col1": [1, 2, 3], "col2": [4, 5, 6]})
+    categorical_cols, numerical_cols = separate_categorical_numerical(data)
+    assert categorical_cols == []
+    assert numerical_cols == ["col1", "col2"]
+
+
+def test_only_categorical_columns():
+    """
+    Check if the function returns the correct output
+    when there are only categorical columns
+    """
+    data = pd.DataFrame({"col1": ["a", "b", "c"], "col2": ["d", "e", "f"]})
+    categorical_cols, numerical_cols = separate_categorical_numerical(data)
+    assert categorical_cols == ["col1", "col2"]
+    assert numerical_cols == []
+
+
+def test_separate_categorical_numerical():
+    """
+    Check if the function returns the correct output
+    when there are both categorical and numerical columns
+    """
+    data = pd.DataFrame({"col1": [1, 2, 3], "col2": ["a", "b", "c"]})
+    categorical_cols, numerical_cols = separate_categorical_numerical(data)
+    assert categorical_cols == ["col2"]
+    assert numerical_cols == ["col1"]
+
+
+def test_empty_dataframe():
+    """
+    Check if the function returns the correct output
+    when the dataframe is empty
+    """
+    data = pd.DataFrame()
+    categorical_cols, numerical_cols = separate_categorical_numerical(data)
+    assert categorical_cols == []
+    assert numerical_cols == []
+
