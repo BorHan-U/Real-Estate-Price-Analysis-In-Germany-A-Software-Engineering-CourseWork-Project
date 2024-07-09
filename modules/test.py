@@ -111,3 +111,60 @@ def test_empty_dataframe():
     assert categorical_cols == []
     assert numerical_cols == []
 
+# Tests for drop_columns_with_zero_threshold function
+
+
+def test_no_zero_values():
+    """
+    Check if the function returns the correct output
+    when there are no zero values
+    """
+    data = pd.DataFrame({"A": [1, 2, 3], "B": [4, 5, 6], "C": [7, 8, 9]})
+    threshold = 1
+    result = drop_columns_with_zero_threshold(data, threshold)
+    assert result.equals(data)
+
+
+def test_drop_columns_with_zero_threshold_with_threshold_0():
+    """
+    Check if the function drops the columns when
+    there are columns with zero values and threshold is 0
+    """
+    data = pd.DataFrame({"A": [1, 2, 3], "B": [0, 0, 0], "C": [0, 0, 0]})
+    threshold = 0
+    expected_output = pd.DataFrame({"A": [1, 2, 3]})
+    assert drop_columns_with_zero_threshold(data, threshold).equals(
+        expected_output
+    )
+
+
+def test_threshold_greater_than_zero_counts():
+    """
+    Check if the function returns the correct output when
+    there are columns with zero values and threshold is greater
+    than amount of zero values
+    """
+    data = pd.DataFrame({"A": [1, 2, 3], "B": [0, 0, 0], "C": [0, 0, 0]})
+    threshold = 3
+    expected_output = data
+    output = drop_columns_with_zero_threshold(data, threshold)
+    pd.testing.assert_frame_equal(output, expected_output)
+
+
+def test_threshold_equal_to_one_column_zero_count():
+    """
+    Check if the function returns the correct output when
+    there are columns with zero values and threshold
+    is equal to amount of zero values
+    """
+    data = pd.DataFrame(
+        {"col1": [0, 1, 2], "col2": [0, 0, 0], "col3": [1, 2, 3]}
+    )
+    threshold = 2
+    expected_output = pd.DataFrame({"col1": [0, 1, 2], "col3": [1, 2, 3]})
+    assert drop_columns_with_zero_threshold(data, threshold).equals(
+        expected_output
+    )
+
+
+
