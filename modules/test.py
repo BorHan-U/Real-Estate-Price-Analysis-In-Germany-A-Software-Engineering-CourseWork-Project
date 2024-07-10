@@ -167,4 +167,43 @@ def test_threshold_equal_to_one_column_zero_count():
     )
 
 
+# Tests for apply_1_plus_log_transformation function
+
+
+def test_single_column_transformation():
+    """
+    Check if the function returns the correct output
+    when there is only one column to be transformed
+    """
+    data = pd.DataFrame({"col1": [1, 2, 3], "col2": [4, 5, 6]})
+    columns_to_transform = ["col1"]
+    transformed_data = apply_1_plus_log_transformation(
+        data, columns_to_transform
+    )
+    assert transformed_data["col1"].tolist() == [
+        np.log1p(1),
+        np.log1p(2),
+        np.log1p(3),
+    ]
+    assert transformed_data["col2"].tolist() == [4, 5, 6]
+
+
+def test_multiple_columns_transformation():
+    """
+    Check if the function returns the correct output
+    when there are multiple columns to be transformed
+    """
+    data = pd.DataFrame(
+        {"col1": [1, 2, 3], "col2": [4, 5, 6], "col3": [7, 8, 9]}
+    )
+    columns_to_transform = ["col1", "col3"]
+    transformed_data = apply_1_plus_log_transformation(
+        data.copy(), columns_to_transform
+    )
+    assert transformed_data["col1"].equals(np.log1p(data["col1"]))
+    assert transformed_data["col2"].equals(data["col2"])
+    assert transformed_data["col3"].equals(np.log1p(data["col3"]))
+
+
+
 
