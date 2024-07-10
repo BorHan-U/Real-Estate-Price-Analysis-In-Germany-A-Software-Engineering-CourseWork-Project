@@ -15,3 +15,5 @@ Clone your forked repository to your local machine.
 ```sh
 git clone https://github.com/yourusername/real-estate-price-analysis.git
 ```
+
+You are all set. Now, follow the [README](README.md) file.
