@@ -4,24 +4,24 @@ message: If you use this software, please cite it using the
   metadata from this file.
 type: software
 authors:
-  - given-names: Aijaz Afzaal
-    family-names: Ahmed
+  - given-name: Aijaz Afzaal
+    family-name: Ahmed
     email: ahmed11@uni-potsdam.de
     affiliation: Universität Potsdam
-  - given-names: Jayed Akbar
-    family-names: Sumon
+  - given-name: Jayed Akbar
+    family-name: Sumon
     email: sumon@uni-potsdam.de
     affiliation: Universität Potsdam
-  - given-names: Md Borhan
-    family-names: Uddin
+  - given-name: Md Borhan
+    family-name: Uddin
     email: uddin2@uni-potsdam.de
     affiliation: Universität Potsdam
-  - given-names: Mohammad
-    family-names: Hasan
+  - given-name: Mohammad
+    family-name: Hasan
     email: hasan3@uni-potsdam.de
     affiliation: Universität Potsdam
-  - given-names: Md Raju
-    family-names: Ahmed
+  - given-name: Md Raju
+    family-name: Ahmed
     email: ahmed10@uni-potsdam.de
     name-particle: Md Raju
     affiliation: Universität Potsdam
