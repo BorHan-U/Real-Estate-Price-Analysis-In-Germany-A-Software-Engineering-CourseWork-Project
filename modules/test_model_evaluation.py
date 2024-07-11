@@ -26,3 +26,34 @@ class TestModelEvaluation(unittest.TestCase):
         data = pd.DataFrame(data, columns=['feature1', 'feature2', 'feature3', 'feature4', 'feature5'])
         data['target'] = target
         return data
+
+
+    def test_model_evaluation(self):
+        # Generate test data
+        test_data = self.generate_test_data()
+
+        # Define models to test
+        models = [
+            ('Multiple Linear Regression', LinearRegression),
+            ('Random Forest', RandomForestRegressor),
+            ('LGBM', LGBMRegressor)
+        ]
+
+        for name, model_class in models:
+            # Evaluate the model
+            output_file = f"results/evaluation_model/yPred_yTrue_table_{name}_testCase.txt"
+            metrics_dict = model_evaluation(name, model_class, test_data, output_file)
+
+            # Print the results
+            print(f"Model: {metrics_dict['Model']}")
+            print(f"MSE: {metrics_dict['MSE']}")
+            print(f"R2-Score: {metrics_dict['R2-Score']}")
+            print()
+
+            # Check if MSE and R-squared are within the desired range
+            self.assertLess(metrics_dict['MSE'], 0.1)
+            self.assertGreater(metrics_dict['R2-Score'], 0.8)
+
+
+if __name__ == '__main__':
+    unittest.main()
