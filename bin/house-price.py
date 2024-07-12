@@ -5,10 +5,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from lightgbm import LGBMRegressor
+from xgboost import XGBRegressor
 import os
 import sys
 import argparse
 
+from sklearn.tree import DecisionTreeRegressor
 
 '''adding the project directory to the
 PYTHONPATH environment variables and
@@ -21,7 +23,6 @@ try:
 except ModuleNotFoundError as e:
     print("You have to add the project directory to the PYTHONPATH \
            environment variable")
-    
 
 
 def main(args):
@@ -40,8 +41,7 @@ def main(args):
     columns_to_map = ['GarageQual', 'GarageCond', 'PoolQC', 'FireplaceQu',
                       'KitchenQual', 'HeatingQC', 'BsmtCond', 'BsmtQual',
                       'ExterCond', 'ExterQual']
-    
-    
+
     for column in columns_to_map:
         data[column] = data[column].map(mapping)
         count_null_data(data)
@@ -108,8 +108,8 @@ def main(args):
     print("Train set shape:", X_train.shape, y_train.shape)
     print("Test set shape:", X_test.shape, y_test.shape)
 
-    name = ['MultipleLinearRegression', 'RandomForest', 'LGBM']
-    model = [LinearRegression, RandomForestRegressor, LGBMRegressor]
+    name = ['MultipleLinearRegression', 'RandomForest', 'LGBM', 'DecisionTree', 'XGB']
+    model = [LinearRegression, RandomForestRegressor, LGBMRegressor, DecisionTreeRegressor, XGBRegressor]
     metrics_list = []
 
     for i, j in zip(name, model):
