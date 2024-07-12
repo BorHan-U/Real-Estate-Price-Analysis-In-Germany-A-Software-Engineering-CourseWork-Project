@@ -59,6 +59,7 @@ def main(args):
     columns.remove('YrSold')
     data = data[columns]
 
+
     data = data.fillna(0)
 
     count_null_data(data)
@@ -117,12 +118,47 @@ def main(args):
     name = ['MultipleLinearRegression', 'RandomForest', 'LGBM', 'DecisionTree', 'XGB']
     model = [LinearRegression, RandomForestRegressor, LGBMRegressor, DecisionTreeRegressor, XGBRegressor]
     metrics_list = []
+    models = [
+        ('MultipleLinearRegression', LinearRegression()),
+        ('RandomForest', RandomForestRegressor()),
+        ('LGBM', LGBMRegressor()),
+        ('DecisionTree', DecisionTreeRegressor()),
+        ('XGB', XGBRegressor())
+    ]
 
-    for i, j in zip(name, model):
-        output_name = f"yPred_yTrue_table_{i}.txt"
+    param_grids = [
+        {},  # No hyperparameters to tune for LinearRegression
+        {
+            'n_estimators': [100, 200, 300],
+            'max_depth': [None, 10, 20, 30],
+            'min_samples_split': [2, 5, 10],
+            'min_samples_leaf': [1, 2, 4]
+        },
+        {
+            'num_leaves': [31, 50],
+            'learning_rate': [0.01, 0.05, 0.1],
+            'n_estimators': [100, 200]
+        },
+        {
+            'max_depth': [None, 10, 20, 30],
+            'min_samples_split': [2, 5, 10],
+            'min_samples_leaf': [1, 2, 4]
+        },
+        {
+            'n_estimators': [100, 200, 300],
+            'learning_rate': [0.01, 0.05, 0.1],
+            'max_depth': [3, 5, 7]
+        }
+    ]
+    best_models, best_params = hyperparameter_tuning(models, param_grids, X_train, y_train)
+
+    metrics_list = []
+    for name, model in best_models.items():
+        output_name = f"yPred_yTrue_table_{name}.txt"
         path = f"results/evaluation_model/{output_name}"
-        metrics = model_evaluation(i, j, transformed_data, path)
+        metrics = model_evaluation(name, model, transformed_data, path)
         metrics_list.append(metrics)
+
     metrics_df = pd.DataFrame(metrics_list)
     print(metrics_df)
 
