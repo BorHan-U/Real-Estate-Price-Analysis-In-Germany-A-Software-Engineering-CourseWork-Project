@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from sklearn.model_selection import train_test_split
-
+from sklearn.model_selection import GridSearchCV
 
 def count_null_data(data):
     missing_counts = (data == 0).sum()
@@ -74,9 +74,6 @@ def apply_1_plus_log_transformation(data, columns_to_transform):
 
 
 def model_evaluation(name, model, data, output_file):
-    from sklearn.model_selection import train_test_split
-    from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-    import numpy as np
 
     X = data.iloc[:, :-1].values
     y = data.iloc[:, -1].values
@@ -135,19 +132,16 @@ def plot_heatmaps(df):
     plt.show()
 
 def hyperparameter_tuning(models, param_grids, X_train, y_train):
-    from sklearn.model_selection import GridSearchCV, cross_val_score
     """
-    Perform hyperparameter tuning using GridSearchCV for multiple models.
-
-    Parameters:
-    models: List of tuples where each tuple contains the model name (str) and the model instance.
-    param_grids: List of dictionaries with parameter names (str) as keys and lists of parameter settings to try as values.
-    X_train: Training data features.
-    y_train: Training data labels.
-
-    Returns:
-    best_models: Dictionary with model names as keys and the best found models as values.
-    best_params: Dictionary with model names as keys and the best found parameters as values.
+        Perform hyperparameter tuning using GridSearchCV for multiple models.
+        Parameters:
+        models: List of tuples where each tuple contains the model name (str) and the model instance.
+        param_grids: List of dictionaries with parameter names (str) as keys and lists of parameter settings to try as values.
+        X_train: Training data features.
+        y_train: Training data labels.
+        Returns:
+        best_models: Dictionary with model names as keys and the best found models as values.
+        best_params: Dictionary with model names as keys and the best found parameters as values.
     """
     best_models = {}
     best_params = {}
