@@ -28,7 +28,7 @@ def main(args):
     '''
     input_file_train = args.house_pricing_train
     data = pd.read_csv(input_file_train)
-
+    output_dir = args.output_dir
     data = data.drop('Id', axis=1)
 
     print("The shape of our dataset is: ", data.shape)
