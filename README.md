@@ -2,7 +2,7 @@
 
 ## Topic: Real Estate Price Analysis
 
-### Authors: Aijaz Afzaal Ahmed, Jayed Akbar Sumon, Md Borhan Uddin, Mohammad Hasan, Md Raju Ahmed
+Authors: Aijaz Afzaal Ahmed, Jayed Akbar Sumon, Md Borhan Uddin, Mohammad Hasan, Md Raju Ahmed
 
 ### Overview
 
@@ -23,7 +23,7 @@ pip install -r requirements.txt
 The script requires two input files: house.py and train.csv. Place these files in the data directory of your project. Then, run the following command to execute the preprocessing script:
 
 ```
-python bin/house.py data/train.csv
+python bin/house-price.py data/train.csv
 ```
 
 The script will perform the following steps:
@@ -65,6 +65,17 @@ coverage html
 
 which will create a htmlcov folder containing an `index.html` file that can be opened and the content viewed in a web browser of your choice.
 
+## Integrating and Using Snakemake
+This project uses Snakemake to manage and automate the data preprocessing and model evaluation workflows. Snakemake ensures that the steps in the workflow are executed in the correct order and only re-executed if necessary. Below are instructions on how to set up and run Snakemake for this project.
+
+Before you can use Snakemake, ensure you have the following installed:
+```
+pip install snakemake
+```
+To run the workflow, navigate to the directory containing the Snakefile and run Snakemake:
+```
+snakemake --cores 1
+```
 ## Directory Structure
 
 Make sure your project directory has the following structure:
@@ -72,39 +83,42 @@ Make sure your project directory has the following structure:
 ```
 project/
 ├── bin/
-│   ├── house.py
-│   └── house.ipynb
+│   ├── house-price.py
+│   └── house-price-analysis.ipynb
 ├── data/
 │   ├── train.csv
 │   └── data_desciption.txt
 ├── docs/
+│   ├── UML_diagram.png
+│   ├── component_analysis.pdf
+│   └── requirements.md   
 ├── modules/
 │   ├── modules.py
 │   ├── test_model_evaluation.py
 │   └── test.py
 ├── package/
 │   ├── build/
-│   │   └── lib/
+│   │   └── bin/
+    |   └── modules/
 │   ├── dist/
-│   │   └── House-Prices-0.11.0.tar.gz
+│   │   └── real-estate-price-analysis.0.1.0.tar.gz
 │   ├── House_Prices.egg-info/
 │   └── setup.py
 ├── results/
-│   ├── coverage
-│   │   ├── htmlcov/
-│   │   └── .coverage
 │   ├── plot_preprocessing
 │   │   └── [<graph>.png]
 │   └── evaluation_model
 │       └── [<prediction>.txt]
 ├── CHANGELOG.md
-├── CITATION.md
+├── citation.cff
 ├── CONDUCT.md
 ├── CONTRIBUTING.md
-├── DOCUMENTATION.html
-├── LICENSE.md
+├── Snakefile
+├── LICENSE.txt
 ├── README.md
+├── .gitignore
 └── requirements.txt
+
 ```
 
 The prediction_DecisionTree.txt file will be saved in the bin directory alongside the house.py file.
