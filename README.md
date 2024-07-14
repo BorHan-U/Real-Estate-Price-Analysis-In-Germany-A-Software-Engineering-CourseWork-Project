@@ -146,7 +146,7 @@ The modules.py script contains utility functions used by the house.py script to 
 
 ## Examples
 
-Example usage of functions in the `modules.py` script can be found in the `house.py` script.
+Example usage of functions in the `modules.py` script can be found in the `house-price.py` script.
 
 ## License
 
