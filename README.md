@@ -120,9 +120,6 @@ project/
 └── requirements.txt
 
 ```
-
-The prediction_DecisionTree.txt file will be saved in the bin directory alongside the house.py file.
-
 Feel free to modify the project structure and adjust the code according to your specific requirements.
 
 ## Requirements
