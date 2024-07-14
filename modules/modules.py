@@ -82,13 +82,11 @@ def model_evaluation(name, model, data, output_file):
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
 
-    mae = mean_absolute_error(y_test, y_pred)
     mse = mean_squared_error(y_test, y_pred)
     r2 = r2_score(y_test, y_pred)
 
     metrics_dict = {
         'Model': name,
-        'MAE': mae,
         'MSE': mse,
         'R2-Score': r2
     }

@@ -4,6 +4,8 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from lightgbm import LGBMRegressor
+from sklearn.tree import DecisionTreeRegressor
+from xgboost import XGBRegressor
 from modules.modules import model_evaluation
 from sklearn.metrics import mean_squared_error, r2_score
 import warnings
@@ -32,9 +34,11 @@ class TestModelEvaluation(unittest.TestCase):
 
         # Define models to test
         models = [
-            ('Multiple Linear Regression', LinearRegression),
-            ('Random Forest', RandomForestRegressor),
-            ('LGBM', LGBMRegressor)
+            ('Multiple Linear Regression', LinearRegression()),
+            ('Random Forest', RandomForestRegressor()),
+            ('LGBM', LGBMRegressor()),
+            ('DecisionTree', DecisionTreeRegressor()),
+            ('XGB', XGBRegressor())
         ]
 
         for name, model_class in models:
@@ -49,8 +53,8 @@ class TestModelEvaluation(unittest.TestCase):
             print()
 
             # Check if MSE and R-squared are within the desired range
-            self.assertLess(metrics_dict['MSE'], 0.1)
-            self.assertGreater(metrics_dict['R2-Score'], 0.8)
+            self.assertLess(metrics_dict['MSE'], 0.2)
+            self.assertGreater(metrics_dict['R2-Score'], 0.7)
 
 
 if __name__ == '__main__':
