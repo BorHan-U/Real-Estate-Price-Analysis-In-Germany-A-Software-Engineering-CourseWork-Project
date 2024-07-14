@@ -143,7 +143,7 @@ You can install these packages by running the command mentioned in the "Installa
 
 ## Functions
 
-The modules.py script contains utility functions used by the house.py script to preprocess data and evaluate models:
+The modules.py script contains utility functions used by the house-price.py script to preprocess data and evaluate models:
 
 <ul>
     <li><b>count_null_data</b>: Counts and prints the number of missing values in each column of the dataset.</li>
@@ -152,7 +152,7 @@ The modules.py script contains utility functions used by the house.py script to 
     <li><b>drop_columns_with_zero_threshold</b>: Drops columns with a high number of zero values based on the specified threshold.</li>
     <li><b>plot_categorical_columns</b>: Plots bar charts for categorical columns to visualize value counts.</li>
     <li><b>apply_1_plus_log_transformation</b>: Applies the 1 plus log transformation to specified numerical columns.</li>
-    <li><b>model_evaluation</b>: Evaluates machine learning models and returns the Mean Squared Error (MSE) and R-squared scores.</li>
+    <li><b>model_evaluation</b>: Evaluates machine learning models with hyperperameter tuning and returns the Mean Squared Error (MSE) and R-squared scores.</li>
 </ul>
 
 ## Examples
@@ -161,4 +161,4 @@ Example usage of functions in the `modules.py` script can be found in the [`hous
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE.txt) file for details.
