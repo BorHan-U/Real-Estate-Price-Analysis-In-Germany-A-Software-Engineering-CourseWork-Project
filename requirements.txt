@@ -8,3 +8,4 @@ lightgbm
 scipy
 pillow
 xgboost
+snakemake

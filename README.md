@@ -135,9 +135,8 @@ The script requires the following Python packages:
 - lightgbm
 - scipy
 - pillow
-- libjpeg
-- zlib
-- libtiff
+- xgboost
+- snakemake
 
 You can install these packages by running the command mentioned in the "Installation" section.
 
