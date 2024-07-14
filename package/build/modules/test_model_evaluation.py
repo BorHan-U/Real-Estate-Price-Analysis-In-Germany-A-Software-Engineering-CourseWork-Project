@@ -48,6 +48,11 @@ class TestModelEvaluation(unittest.TestCase):
             print(f"R2-Score: {metrics_dict['R2-Score']}")
             print()
 
+            # Check if MSE and R-squared are within the desired range
+            self.assertLess(metrics_dict['MSE'], 0.1)
+            self.assertGreater(metrics_dict['R2-Score'], 0.8)
+
+
            
 
 
