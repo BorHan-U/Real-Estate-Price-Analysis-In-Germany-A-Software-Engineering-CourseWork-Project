@@ -1,0 +1,21 @@
+Metadata-Version: 2.1
+Name: real estate price analysis
+Version: 0.1.0
+Summary: Real estate price analysis using various machine learning technique
+Home-page: https://gitup.uni-potsdam.de/sumon/real-estate-price-analysis
+Author: ['Jayed Akbar Sumon ', 'Mohammed Hasan','Md Borhan Uddin', 'Aijaz Afzaal Ahmed','Md Raju Ahmed']
+Author-email: ['sumon@uni-potsdam.de', 'mohammad.hasan@uni-potsdam.de', 'md.borhan.uddin@uni-potsdam.de', 'aijazafzaal.ahmed@uni-potsdam.de', 'ahmed10@uni-potsdam.de']
+Keywords: house-prices real-estate-price-prediction machine-learning prediction
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+
+Description-Content-Type: text/plain
+
+The aim of this project is to explore the train dataset by performing preprocessing operations, including data mining techniques like removing irrelevant data and updating missing values. Subsequently, we will apply various machine learning algorithms to the preprocessed dataset. The ultimate goal is to determine the best model for predicting property prices based on their features, including factors like location.
+
