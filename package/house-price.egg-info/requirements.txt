@@ -4,3 +4,7 @@ scikit-learn
 lightgbm
 seaborn
 matplotlib
+coverage
+scipy
+pillow
+xgboost
