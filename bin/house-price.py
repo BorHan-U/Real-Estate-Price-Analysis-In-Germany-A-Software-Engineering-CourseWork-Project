@@ -1,19 +1,18 @@
+import os
+import sys
+import argparse
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from lightgbm import LGBMRegressor
-import os
-import sys
-import argparse
+from xgboost import XGBRegressor
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.model_selection import GridSearchCV, cross_val_score
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
-
-'''adding the project directory to the
-PYTHONPATH environment variables and
-importing the modules script
-'''
+#matplotlib.use('Agg')  # Agg backend for non-interactive plotting
 
 try:
     sys.path.append(os.getcwd())
@@ -21,7 +20,7 @@ try:
 except ModuleNotFoundError as e:
     print("You have to add the project directory to the PYTHONPATH \
            environment variable")
-    
+
 
 
 def main(args):
@@ -40,8 +39,7 @@ def main(args):
     columns_to_map = ['GarageQual', 'GarageCond', 'PoolQC', 'FireplaceQu',
                       'KitchenQual', 'HeatingQC', 'BsmtCond', 'BsmtQual',
                       'ExterCond', 'ExterQual']
-    
-    
+
     for column in columns_to_map:
         data[column] = data[column].map(mapping)
         count_null_data(data)
@@ -52,6 +50,7 @@ def main(args):
     columns.remove('YearBuilt')
     columns.remove('YrSold')
     data = data[columns]
+
 
     data = data.fillna(0)
 
@@ -84,8 +83,7 @@ def main(args):
                                                       threshold_0)
 
     numerical_data.hist(bins=50, xlabelsize=8, ylabelsize=8)
-    plt.savefig('results/plot_preprocessing/ \
-    after_cleaning_numericalData_histogram_plot.png')
+    plt.savefig('results/plot_preprocessing/after_cleaning_numericalData_histogram_plot.png')
     plt.show()
 
     columns_to_transform = ['1stFlrSF', 'GrLivArea', 'LotArea', 'SalePrice']
@@ -93,8 +91,7 @@ def main(args):
                                                        columns_to_transform)
 
     transformed_data.hist(bins=50, xlabelsize=8, ylabelsize=8)
-    plt.savefig('results/plot_preprocessing/ \
-        transformed_data_histogram_plot.png')
+    plt.savefig('results/plot_preprocessing/transformed_data_histogram_plot.png')
     plt.show()
 
     plot_boxplot(numerical_data, 'OverallQual', 'SalePrice')
@@ -103,20 +100,54 @@ def main(args):
 
     X = transformed_data.iloc[:, :-1].values
     y = transformed_data.iloc[:, -1].values
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,
-                                                        random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,random_state=42)
     print("Train set shape:", X_train.shape, y_train.shape)
     print("Test set shape:", X_test.shape, y_test.shape)
 
-    name = ['MultipleLinearRegression', 'RandomForest', 'LGBM']
-    model = [LinearRegression, RandomForestRegressor, LGBMRegressor]
+    name = ['MultipleLinearRegression', 'RandomForest', 'LGBM', 'DecisionTree', 'XGB']
+    model = [LinearRegression, RandomForestRegressor, LGBMRegressor, DecisionTreeRegressor, XGBRegressor]
     metrics_list = []
+    models = [
+        ('MultipleLinearRegression', LinearRegression()),
+        ('RandomForest', RandomForestRegressor()),
+        ('LGBM', LGBMRegressor()),
+        ('DecisionTree', DecisionTreeRegressor()),
+        ('XGB', XGBRegressor())
+    ]
 
-    for i, j in zip(name, model):
-        output_name = f"yPred_yTrue_table_{i}.txt"
+    param_grids = [
+        {},  # No hyperparameters to tune for LinearRegression
+        {
+            'n_estimators': [100, 200, 300],
+            'max_depth': [None, 10, 20, 30],
+            'min_samples_split': [2, 5, 10],
+            'min_samples_leaf': [1, 2, 4]
+        },
+        {
+            'num_leaves': [31, 50],
+            'learning_rate': [0.01, 0.05, 0.1],
+            'n_estimators': [100, 200]
+        },
+        {
+            'max_depth': [None, 10, 20, 30],
+            'min_samples_split': [2, 5, 10],
+            'min_samples_leaf': [1, 2, 4]
+        },
+        {
+            'n_estimators': [100, 200, 300],
+            'learning_rate': [0.01, 0.05, 0.1],
+            'max_depth': [3, 5, 7]
+        }
+    ]
+    best_models, best_params = hyperparameter_tuning(models, param_grids, X_train, y_train)
+
+    metrics_list = []
+    for name, model in best_models.items():
+        output_name = f"yPred_yTrue_table_{name}.txt"
         path = f"results/evaluation_model/{output_name}"
-        metrics = model_evaluation(i, j, transformed_data, path)
+        metrics = model_evaluation(name, model, transformed_data, path)
         metrics_list.append(metrics)
+
     metrics_df = pd.DataFrame(metrics_list)
     print(metrics_df)
 
@@ -124,7 +155,7 @@ def main(args):
 if __name__ == '__main__':
     USAGE = 'This project is about preprocessing our dataset \
     for house pricing. therefore we need at first train.csv file \
-        to train our model, then test it using the test.csv file.'
+        to train our model.'
     parser = argparse.ArgumentParser(description=USAGE)
     parser.add_argument('house_pricing_train', type=str,
                         help='Path to the house_pricing train csv file')

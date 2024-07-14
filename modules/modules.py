@@ -2,9 +2,9 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from sklearn.model_selection import train_test_split
-
+from sklearn.model_selection import GridSearchCV
 
 def count_null_data(data):
     missing_counts = (data == 0).sum()
@@ -74,27 +74,27 @@ def apply_1_plus_log_transformation(data, columns_to_transform):
 
 
 def model_evaluation(name, model, data, output_file):
-    from sklearn.model_selection import train_test_split
-    from sklearn.metrics import mean_squared_error, r2_score
 
     X = data.iloc[:, :-1].values
     y = data.iloc[:, -1].values
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,
-                                                        random_state=42)
-    model = model()
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
+
     mse = mean_squared_error(y_test, y_pred)
     r2 = r2_score(y_test, y_pred)
+
     metrics_dict = {
         'Model': name,
         'MSE': mse,
         'R2-Score': r2
     }
-    result = np.concatenate((y_pred.reshape(len(y_pred), 1),
-                             y_test.reshape(len(y_test), 1)), 1)
+
+    result = np.concatenate((y_pred.reshape(len(y_pred), 1), y_test.reshape(len(y_test), 1)), 1)
     with open(output_file, "w") as file:
         np.savetxt(file, result, fmt="%.2f", delimiter=",")
+
     return metrics_dict
 
 
@@ -108,7 +108,7 @@ def plot_boxplot(df, x_column, y_column):
     plt.title(f'Boxplot of {y_column} by {x_column}')
     plt.xlabel(x_column)
     plt.ylabel(y_column)
-    name = f"Boxplot of {y_column} by {x_column}.png"
+    name = f"Boxplot_of_{y_column}_by_{x_column}.png"
     plt.savefig(f"results/plot_preprocessing/{name}.png")
     plt.show()
 
@@ -126,5 +126,34 @@ def plot_heatmaps(df):
                 annot_kws={'size': 10}, yticklabels=cols.values,
                 xticklabels=cols.values, cmap="RdBu", ax=ax[1])
     ax[1].set_title('Top 10 most correlated variables with sale price')
-    plt.savefig("results/plot_preprocessing/Correlation Matrix Heatmap.png")
+    plt.savefig("results/plot_preprocessing/Correlation_Matrix_Heatmap.png")
     plt.show()
+
+def hyperparameter_tuning(models, param_grids, X_train, y_train):
+    """
+        Perform hyperparameter tuning using GridSearchCV for multiple models.
+        Parameters:
+        models: List of tuples where each tuple contains the model name (str) and the model instance.
+        param_grids: List of dictionaries with parameter names (str) as keys and lists of parameter settings to try as values.
+        X_train: Training data features.
+        y_train: Training data labels.
+        Returns:
+        best_models: Dictionary with model names as keys and the best found models as values.
+        best_params: Dictionary with model names as keys and the best found parameters as values.
+    """
+    best_models = {}
+    best_params = {}
+
+    for (name, model), param_grid in zip(models, param_grids):
+        print(f"Tuning hyperparameters for {name}...")
+        grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=3, scoring='neg_mean_squared_error',
+                                   n_jobs=-1, verbose=2)
+        grid_search.fit(X_train, y_train)
+
+        best_models[name] = grid_search.best_estimator_
+        best_params[name] = grid_search.best_params_
+
+        print(f"Best parameters for {name}: {grid_search.best_params_}")
+
+    return best_models, best_params
+

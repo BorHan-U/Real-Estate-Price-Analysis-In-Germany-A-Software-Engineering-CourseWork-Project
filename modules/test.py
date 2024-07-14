@@ -37,6 +37,7 @@ def test_no_missing_values(capsys):
     captured = capsys.readouterr()
     assert captured.out.strip() == "There are no 0 value anymore!"
 
+
 # Tests for delete_columns_with_zero_data function
 
 
@@ -64,6 +65,7 @@ def test_no_columns_dropped():
     assert delete_columns_with_zero_data(data, threshold).equals(
         expected_output
     )
+
 
 # Tests for separate_categorical_numerical function
 
@@ -110,6 +112,7 @@ def test_empty_dataframe():
     categorical_cols, numerical_cols = separate_categorical_numerical(data)
     assert categorical_cols == []
     assert numerical_cols == []
+
 
 # Tests for drop_columns_with_zero_threshold function
 
@@ -203,7 +206,3 @@ def test_multiple_columns_transformation():
     assert transformed_data["col1"].equals(np.log1p(data["col1"]))
     assert transformed_data["col2"].equals(data["col2"])
     assert transformed_data["col3"].equals(np.log1p(data["col3"]))
-
-
-
-
