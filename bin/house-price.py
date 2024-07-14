@@ -1,3 +1,6 @@
+import os
+import sys
+import argparse
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
@@ -8,16 +11,8 @@ from xgboost import XGBRegressor
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.model_selection import GridSearchCV, cross_val_score
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-import os
-import sys
-import argparse
 
 #matplotlib.use('Agg')  # Agg backend for non-interactive plotting
-
-'''adding the project directory to the
-PYTHONPATH environment variables and
-importing the modules script
-'''
 
 try:
     sys.path.append(os.getcwd())
@@ -88,8 +83,7 @@ def main(args):
                                                       threshold_0)
 
     numerical_data.hist(bins=50, xlabelsize=8, ylabelsize=8)
-    plt.savefig('results/plot_preprocessing/ \
-    after_cleaning_numericalData_histogram_plot.png')
+    plt.savefig('results/plot_preprocessing/after_cleaning_numericalData_histogram_plot.png')
     plt.show()
 
     columns_to_transform = ['1stFlrSF', 'GrLivArea', 'LotArea', 'SalePrice']
@@ -97,8 +91,7 @@ def main(args):
                                                        columns_to_transform)
 
     transformed_data.hist(bins=50, xlabelsize=8, ylabelsize=8)
-    plt.savefig('results/plot_preprocessing/ \
-        transformed_data_histogram_plot.png')
+    plt.savefig('results/plot_preprocessing/transformed_data_histogram_plot.png')
     plt.show()
 
     plot_boxplot(numerical_data, 'OverallQual', 'SalePrice')
@@ -107,8 +100,7 @@ def main(args):
 
     X = transformed_data.iloc[:, :-1].values
     y = transformed_data.iloc[:, -1].values
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,
-                                                        random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,random_state=42)
     print("Train set shape:", X_train.shape, y_train.shape)
     print("Test set shape:", X_test.shape, y_test.shape)
 
@@ -163,7 +155,7 @@ def main(args):
 if __name__ == '__main__':
     USAGE = 'This project is about preprocessing our dataset \
     for house pricing. therefore we need at first train.csv file \
-        to train our model, then test it using the test.csv file.'
+        to train our model.'
     parser = argparse.ArgumentParser(description=USAGE)
     parser.add_argument('house_pricing_train', type=str,
                         help='Path to the house_pricing train csv file')

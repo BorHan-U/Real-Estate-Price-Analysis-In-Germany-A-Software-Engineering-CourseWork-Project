@@ -110,7 +110,7 @@ def plot_boxplot(df, x_column, y_column):
     plt.title(f'Boxplot of {y_column} by {x_column}')
     plt.xlabel(x_column)
     plt.ylabel(y_column)
-    name = f"Boxplot of {y_column} by {x_column}.png"
+    name = f"Boxplot_of_{y_column}_by_{x_column}.png"
     plt.savefig(f"results/plot_preprocessing/{name}.png")
     plt.show()
 
@@ -128,7 +128,7 @@ def plot_heatmaps(df):
                 annot_kws={'size': 10}, yticklabels=cols.values,
                 xticklabels=cols.values, cmap="RdBu", ax=ax[1])
     ax[1].set_title('Top 10 most correlated variables with sale price')
-    plt.savefig("results/plot_preprocessing/Correlation Matrix Heatmap.png")
+    plt.savefig("results/plot_preprocessing/Correlation_Matrix_Heatmap.png")
     plt.show()
 
 def hyperparameter_tuning(models, param_grids, X_train, y_train):
