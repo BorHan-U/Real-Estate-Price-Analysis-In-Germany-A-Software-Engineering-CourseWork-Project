@@ -22,8 +22,7 @@ def test_missing_values(capsys):
     captured = capsys.readouterr()
     assert (
         captured.out.strip()
-        == "Column 'A': 1 values 0\nColumn \
-'B': 2 values 0"
+        == "Column 'A': 1 values 0\nColumn \'B': 2 values 0"
     )
 
 
