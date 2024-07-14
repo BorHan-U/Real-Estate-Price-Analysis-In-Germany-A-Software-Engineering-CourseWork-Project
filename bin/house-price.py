@@ -159,5 +159,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=USAGE)
     parser.add_argument('house_pricing_train', type=str,
                         help='Path to the house_pricing train csv file')
+    parser.add_argument('output_dir', type=str, help='Path to the output directory')
     args = parser.parse_args()
     main(args)
