@@ -13,7 +13,7 @@ Fork the repository to your own GitHub account by clicking the "Fork" button on 
 Clone your forked repository to your local machine.
 
 ```sh
-git clone https://github.com/yourusername/real-estate-price-analysis.git
+git clone https://github.com/sumon/real-estate-price-analysis.git
 ```
 
 You are all set. Now, follow the [README](README.md) file.
