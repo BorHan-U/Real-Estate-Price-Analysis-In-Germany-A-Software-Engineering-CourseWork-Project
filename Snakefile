@@ -1,27 +1,20 @@
-# Snakefile
+include: "workflow/rules/preprocess.smk"
+include: "workflow/rules/analyze.smk"
+include: "workflow/rules/evaluate.smk"
 
-# Define paths to input data and scripts
-DATA_DIR = "data/"
-TRAIN_DATA = DATA_DIR + "train.csv"
-
-SCRIPT_DIR = "bin/"
-PREPROCESS_SCRIPT = SCRIPT_DIR + "house-price.py"
-
-RESULTS_DIR = "results/"
-PREPROCESS_PLOT_DIR = RESULTS_DIR + "plot_preprocessing/"
-
-# Rule for preprocessing the data
-rule preprocess:
-    input:
-        TRAIN_DATA
-    output:
-        PREPROCESS_PLOT_DIR + "transformed_data_histogram_plot.png"
-    params:
-        output_dir=PREPROCESS_PLOT_DIR
-    shell:
-        "python {PREPROCESS_SCRIPT} {input} {params.output_dir}"
-
-# Define the overall workflow
 rule all:
     input:
-        PREPROCESS_PLOT_DIR + "transformed_data_histogram_plot.png"
+        "results/plot_preprocessing/analysis_complete.txt",
+        "results/evaluation_model/metrics.csv"
+
+rule preprocess_target:
+    input:
+        "data/preprocessed_data.csv"
+
+rule analyze_target:
+    input:
+        "results/plot_preprocessing/analysis_complete.txt"
+
+rule evaluate_target:
+    input:
+        "results/evaluation_model/metrics.csv"
