@@ -23,10 +23,16 @@ rule evaluate_target:
     input:
         "results/evaluation_model/metrics.csv"
 
-# Cleanup rule to remove results directories
 # Cleanup rule to remove results directories using Python for cross-platform compatibility
 rule cleanup:
-    shell:
-        """
-        python -c "import shutil; shutil.rmtree('results/plot_preprocessing'); shutil.rmtree('results/evaluation_model')"
-        """
+    run:
+        import os
+        
+        def remove_files(directory):
+            for root, dirs, files in os.walk(directory):
+                for file in files:
+                    os.remove(os.path.join(root, file))
+        
+        remove_files('results/plot_preprocessing')
+        remove_files('results/evaluation_model')
+    
