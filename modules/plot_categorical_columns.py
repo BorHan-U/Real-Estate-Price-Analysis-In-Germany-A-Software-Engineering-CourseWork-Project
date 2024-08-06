@@ -15,4 +15,4 @@ def plot_categorical_columns(data):
         axes[row, col].set_ylabel('Count')
         axes[row, col].tick_params(axis='x', rotation=45)
     plt.tight_layout()
-    plt.show()
+    #plt.show()

@@ -1,26 +1,38 @@
 import numpy as np
 from sklearn.metrics import mean_squared_error, r2_score
-from sklearn.model_selection import train_test_split
 
-def model_evaluation(name, model, data, output_file):
-    X = data.iloc[:, :-1].values
-    y = data.iloc[:, -1].values
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+def model_evaluation(name, model, X_test, y_test, output_file):
+    """
+    Evaluate a model and save the predicted and actual values to a file.
 
-    model.fit(X_train, y_train)
+    Args:
+        name (str): Name of the model.
+        model: Trained model to be evaluated.
+        X_test (np.ndarray): Test features.
+        y_test (np.ndarray): True values for the test set.
+        output_file (str): Path to the file where predictions and true values will be saved.
+
+    Returns:
+        dict: Dictionary containing evaluation metrics.
+    """
+    
+    # Predict using the provided model
     y_pred = model.predict(X_test)
 
+    # Calculate metrics
     mse = mean_squared_error(y_test, y_pred)
     r2 = r2_score(y_test, y_pred)
 
+    # Store metrics in a dictionary
     metrics_dict = {
         'Model': name,
         'MSE': mse,
         'R2-Score': r2
     }
 
-    result = np.concatenate((y_pred.reshape(len(y_pred), 1), y_test.reshape(len(y_test), 1)), 1)
+    # Save predictions and true values to a file
+    result = np.column_stack((y_pred, y_test))  # Combine predictions and true values side by side
     with open(output_file, "w") as file:
-        np.savetxt(file, result, fmt="%.2f", delimiter=",")
+        np.savetxt(file, result, fmt="%.2f", delimiter=",", header="Predicted,Actual", comments='')
 
     return metrics_dict

@@ -21,4 +21,4 @@ def plot_boxplot(df, x_column, y_column, output_dir):
     os.makedirs(output_dir, exist_ok=True)
     
     plt.savefig(os.path.join(output_dir, name))
-    plt.show()
+    #plt.show()

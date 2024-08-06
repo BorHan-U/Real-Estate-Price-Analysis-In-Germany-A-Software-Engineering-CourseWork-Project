@@ -21,4 +21,4 @@ def plot_heatmaps(df, output_dir):
     os.makedirs(output_dir, exist_ok=True)
     
     plt.savefig(os.path.join(output_dir, "Correlation_Matrix_Heatmap.png"))
-    plt.show()
+    #plt.show()
