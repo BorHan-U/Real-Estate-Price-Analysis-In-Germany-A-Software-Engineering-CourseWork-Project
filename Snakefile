@@ -1,12 +1,23 @@
+# Include rules from other files
 include: "workflow/rules/preprocess.smk"
 include: "workflow/rules/analyze.smk"
 include: "workflow/rules/evaluate.smk"
+
 
 # Rule to ensure that all targets are included
 rule all:
     input:
         "results/plot_preprocessing/analysis_complete.txt",
         "results/evaluation_model/metrics.csv"
+# Rule to create necessary directories before processing
+rule create_directories:
+    output:
+        directory("results/plot_preprocessing"),
+        directory("results/evaluation_model")
+    run:
+        import os
+        os.makedirs("results/plot_preprocessing", exist_ok=True)
+        os.makedirs("results/evaluation_model", exist_ok=True)
 
 # Rule to handle preprocessing results
 rule preprocess_target:
@@ -27,12 +38,13 @@ rule evaluate_target:
 rule cleanup:
     run:
         import os
-        
+        import shutil
         def remove_files(directory):
-            for root, dirs, files in os.walk(directory):
-                for file in files:
-                    os.remove(os.path.join(root, file))
-        
+            """Remove all files and directories in the specified directory."""
+            for root, dirs, files in os.walk(directory, topdown=False):
+                for name in files:
+                    os.remove(os.path.join(root, name))
+                for name in dirs:
+                    shutil.rmtree(os.path.join(root, name))
         remove_files('results/plot_preprocessing')
         remove_files('results/evaluation_model')
-    
