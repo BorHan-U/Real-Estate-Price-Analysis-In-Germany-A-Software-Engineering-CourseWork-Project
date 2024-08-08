@@ -14,15 +14,33 @@ def model_evaluation(name, model, X_test, y_test, output_file):
 
     Returns:
         dict: Dictionary containing evaluation metrics.
+    
+    Raises:
+        ValueError: If X_test or y_test is empty, or if their shapes are incompatible.
+        Exception: For any error that occurs during model prediction or file writing.
     """
     
-    # Predict using the provided model
-    y_pred = model.predict(X_test)
+    # Check if X_test and y_test are empty
+    if X_test.size == 0 or y_test.size == 0:
+        raise ValueError("X_test and y_test must not be empty.")
+    
+    # Check if the shapes of X_test and y_test are compatible
+    if len(X_test) != len(y_test):
+        raise ValueError("The number of samples in X_test and y_test must be the same.")
+    
+    try:
+        # Predict using the provided model
+        y_pred = model.predict(X_test)
+    except Exception as e:
+        raise Exception(f"Error during model prediction: {e}")
 
-    # Calculate metrics
-    mse = mean_squared_error(y_test, y_pred)
-    r2 = r2_score(y_test, y_pred)
-
+    try:
+        # Calculate metrics
+        mse = mean_squared_error(y_test, y_pred)
+        r2 = r2_score(y_test, y_pred)
+    except ValueError as e:
+        raise ValueError(f"Error calculating evaluation metrics: {e}")
+    
     # Store metrics in a dictionary
     metrics_dict = {
         'Model': name,
@@ -30,9 +48,12 @@ def model_evaluation(name, model, X_test, y_test, output_file):
         'R2-Score': r2
     }
 
-    # Save predictions and true values to a file
-    result = np.column_stack((y_pred, y_test))  # Combine predictions and true values side by side
-    with open(output_file, "w") as file:
-        np.savetxt(file, result, fmt="%.2f", delimiter=",", header="Predicted,Actual", comments='')
+    try:
+        # Save predictions and true values to a file
+        result = np.column_stack((y_pred, y_test))  # Combine predictions and true values side by side
+        with open(output_file, "w") as file:
+            np.savetxt(file, result, fmt="%.2f", delimiter=",", header="Predicted,Actual", comments='')
+    except Exception as e:
+        raise Exception(f"Error writing results to file: {e}")
 
     return metrics_dict
