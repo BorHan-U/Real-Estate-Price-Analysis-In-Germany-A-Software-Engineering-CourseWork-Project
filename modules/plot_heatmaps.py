@@ -4,10 +4,16 @@ import seaborn as sns
 import numpy as np
 
 def plot_heatmaps(df, output_dir):
-    corrmat = df.corr()
+    # Select only numeric columns for correlation
+    numeric_df = df.select_dtypes(include=[np.number])
+    corrmat = numeric_df.corr()
+
     f, ax = plt.subplots(1, 2, figsize=(20, 10))
+    
+    # Plot the full correlation matrix heatmap
     sns.heatmap(corrmat, vmax=0.8, square=True, cmap="RdBu", ax=ax[0])
     ax[0].set_title('Correlation Matrix Heatmap')
+
     k = 10
     if 'SalePrice' in corrmat.columns:
         cols = corrmat.nlargest(k, 'SalePrice')['SalePrice'].index
@@ -23,5 +29,6 @@ def plot_heatmaps(df, output_dir):
     # Ensure the output directory exists
     os.makedirs(output_dir, exist_ok=True)
     
+    # Save the heatmap as a PNG file
     plt.savefig(os.path.join(output_dir, "Correlation_Matrix_Heatmap.png"))
-    # plt.show()
+    plt.close()
