@@ -1,4 +1,5 @@
 import pandas as pd
+import argparse
 
 def count_null_data(data):
     """
@@ -33,3 +34,17 @@ def count_null_data(data):
     
     if no_missing_data:
         print("There are no zero or NaN values in any numeric columns!")
+
+def main():
+    parser = argparse.ArgumentParser(description="Count the number of zero and NaN values in each column of a DataFrame.")
+    parser.add_argument("file", type=str, help="Path to the input CSV file.")
+    args = parser.parse_args()
+    
+    # Read the data from the CSV file
+    data = pd.read_csv(args.file)
+    
+    # Call the count_null_data function
+    count_null_data(data)
+
+if __name__ == "__main__":
+    main()
