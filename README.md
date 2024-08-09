@@ -1,24 +1,61 @@
-# Research Software Engineering Group Project
+# Research Software Engineering Group Project 2
 
-## Topic: Real Estate Price Analysis
+The project (Real Estate Price Analysis) aims to analysis of house price data and develop a machine learning model to predict the real estate (housing) prices while using several input parameters as the base for our prediction.
+
+This research project was worked on during the group project part of the course **Research Software Engineering**.
 
 Authors: Aijaz Afzaal Ahmed, Jayed Akbar Sumon, Md Borhan Uddin, Mohammad Hasan, Md Raju Ahmed
 
-### Overview
+## Table of contents
+- [Introduction](#ntroduction)
+- [Usage](#usage)
+    - [Package](#packagerequirement)
+    - [Running the Workflow](#runningtheworkflow)
+    - [Testing](#testing)
+    - [Integrating and Using Snakemake](#integratingandusingsnakemake)
+- [Directory Structure](#directorystructure)
+- [Functions](#functions)
+    - [Examples Usage of Function](#examplesusageoffunction)
+- [Contributing Guidelines](#contributingguidelines)
+- [Contact Information](#contactinformation)
+- [Citation](#citation)
+- [License](#license)
 
-This research project was worked on during the group project part of the course **Research Software Engineering** at the University of Potsdam.
 
-We aim to develop a machine learning model to predict the real estate (housing) prices while using several input parameters as the base for our prediction.
+## Introduction
+Finding a house becomes a daunting task in many countries including germany. To alleviate this problem, we aim to develop a machine learning model to predict the real estate (housing) prices while using several input parameters as the base for our prediction. It seeks to explore and identify the key factors influencing property prices using an extensive dataset of property attributes. In brief, by employing Exploratory data analysis, the result uncovered visualizations, patterns and correlations within the data, ultimately predicting sale prices and highlighting the most influential factors.
 
-## Installation
+## Usage
 
-To use this script, you need to have Python installed on your system (3.8 or higher). You also need to install the required dependencies by running the following command:
+Ensure you have the following prerequisites installed on your system:
+
+- Python3: [For environment management](https://www.python.org/downloads/)
+- Snakemake: [For workflow management.](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
+- VSCode: [For IDE, can be chosen on preference](https://code.visualstudio.com/download)
+
+## Package Requirement
+The script requires the following Python packages:
+
+- pandas
+- numpy
+- matplotlib
+- seaborn
+- scikit-learn
+- coverage
+- lightgbm
+- scipy
+- pillow
+- xgboost
+- snakemake
+
+You can install these packages by running the following command.
 
 ```
 pip install -r requirements.txt
 ```
 
-## Usage
+
+## Running the Workflow
 
 The script requires two input files: house.py and train.csv. Place these files in the data directory of your project. Then, run the following command to execute the preprocessing script:
 
@@ -104,6 +141,28 @@ project/
 │   │   └── real-estate-price-analysis.0.1.0.tar.gz
 │   ├── House_Prices.egg-info/
 │   └── setup.py
+├── tests/
+│   ├── output_dir
+│   ├── output.csv
+│   └── test_apply_1_plus_log_transformation.py 
+│   ├── test_count_null_data.py
+│   └── test_delete_columns_with_zero_data.py
+│   ├── test_drop_columns_with_zero_threshold.py
+│   └── test_hyperparameter_tuning.p
+│   ├── test_model_evaluation.py
+│   └── test_plot_boxplot.py 
+│   ├── test_plot_categorical_columns.py
+│   └── test_plot_heatmaps.py
+│   ├── test_separate_categorical_numerical.py
+├── workflow/
+│   ├── rules
+│       └── analyze.smk
+        └── evaluate.smk
+        └── preprocess.smk
+│   ├── scripts
+│       └── analyze_data
+        └── evaluate_models.py
+        └── preprocess_data
 ├── results/
 │   ├── plot_preprocessing
 │   │   └── [<graph>.png]
@@ -122,23 +181,6 @@ project/
 ```
 Feel free to modify the project structure and adjust the code according to your specific requirements.
 
-## Requirements
-
-The script requires the following Python packages:
-
-- pandas
-- numpy
-- matplotlib
-- seaborn
-- scikit-learn
-- coverage
-- lightgbm
-- scipy
-- pillow
-- xgboost
-- snakemake
-
-You can install these packages by running the command mentioned in the "Installation" section.
 
 ## Functions
 
@@ -154,9 +196,26 @@ The modules.py script contains utility functions used by the house-price.py scri
     <li><b>model_evaluation</b>: Evaluates machine learning models with hyperperameter tuning and returns the Mean Squared Error (MSE) and R-squared scores.</li>
 </ul>
 
-## Examples
+## Examples Usage of Function
 
 Example usage of functions in the `modules.py` script can be found in the [`house-price.py`](bin/house-price.py) script.
+
+## Contributing Guidelines
+If you wish to contribute to the project, please review the  [contribution guidelines](CONTRIBUTING.md) and the  [code of conduct](CONDUCT.md) . By participating, you are expected to adhere to these guidelines.
+
+## Contact Information
+
+For any inquiries, please contact us at:
+
+- [Md Borhan Uddin](md.borhan.uddin@uni-potsdam.de)
+- [Name 2](mailto:philipp.entress@example.com)
+- [Name 3](mailto:max.nowaczyk@example.com)
+- [Name 4](mailto:tauqeer.rumaney@example.com)
+- [Namae 5](mailto:tim.werner@example.com)
+
+## Citation
+
+For information on how to cite this project, please refer to the [Citation file](citation.cff).
 
 ## License
 
