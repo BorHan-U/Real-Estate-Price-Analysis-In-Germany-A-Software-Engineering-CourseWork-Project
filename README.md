@@ -7,12 +7,12 @@ This research project was worked on during the group project part of the course 
 Authors: Aijaz Afzaal Ahmed, Jayed Akbar Sumon, Md Borhan Uddin, Mohammad Hasan, Md Raju Ahmed
 
 ## Table of contents
-- [Introduction](#ntroduction)
+- [Introduction](#introduction)
 - [Usage](#usage)
     - [Package](#package-requirement)
     - [Running the Workflow](#running-the-workflow)
     - [Testing](#testing)
-    - [Integrating and Using Snakemake](#integrating-and-usingsnakemake)
+    - [Integrating and Using Snakemake](#integrating-and-using-snakemake)
 - [Directory Structure](#directory-structure)
 - [Functions](#functions)
     - [Examples Usage of Function](#examples-usage-of-function)
@@ -29,9 +29,9 @@ Finding a house becomes a daunting task in many countries including germany. To 
 
 Ensure you have the following prerequisites installed on your system:
 
-- [Python3](https://www.python.org/downloads/): For environment management
+- [Python3](https://www.python.org/downloads/): For environment management.
 - [Snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html): For workflow management.
-- [VSCode] (https://code.visualstudio.com/download): For IDE, can be chosen on preference
+- [VSCode](https://code.visualstudio.com/download): For IDE, can be chosen on preference.
 
 ## Package Requirement
 The script requires the following Python packages:
@@ -136,7 +136,7 @@ project/
 ├── package/
 │   ├── build/
 │   │   └── bin/
-    |   └── modules/
+│   |   └── modules/
 │   ├── dist/
 │   │   └── real-estate-price-analysis.0.1.0.tar.gz
 │   ├── House_Prices.egg-info/
@@ -156,13 +156,13 @@ project/
 │   ├── test_separate_categorical_numerical.py
 ├── workflow/
 │   ├── rules
-│       └── analyze.smk
-        └── evaluate.smk
-        └── preprocess.smk
+│   │   └── analyze.smk
+│   │    └── evaluate.smk
+│   │    └── preprocess.smk
 │   ├── scripts
-│       └── analyze_data
-        └── evaluate_models.py
-        └── preprocess_data
+│   │   └── analyze_data
+│   │    └── evaluate_models.py
+│   │   └── preprocess_data
 ├── results/
 │   ├── plot_preprocessing
 │   │   └── [<graph>.png]
