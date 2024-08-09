@@ -1,4 +1,5 @@
 import pandas as pd
+import argparse
 
 def delete_columns_with_zero_data(data, threshold):
     """
@@ -38,3 +39,24 @@ def delete_columns_with_zero_data(data, threshold):
         print("No columns were dropped.")
     
     return data
+
+def main():
+    parser = argparse.ArgumentParser(description="Delete columns from a DataFrame where zero values exceed a given threshold.")
+    parser.add_argument("file", type=str, help="Path to the input CSV file.")
+    parser.add_argument("threshold", type=int, help="Threshold for the maximum allowed number of zero values in a column.")
+    parser.add_argument("--output", type=str, default="filtered_data.csv", help="Path to save the filtered CSV file.")
+
+    args = parser.parse_args()
+
+    # Read the data from the CSV file
+    data = pd.read_csv(args.file)
+
+    # Apply the column deletion based on zero values
+    filtered_data = delete_columns_with_zero_data(data, args.threshold)
+
+    # Save the filtered data to a CSV file
+    filtered_data.to_csv(args.output, index=False)
+    print(f"Filtered data saved to {args.output}")
+
+if __name__ == "__main__":
+    main()
