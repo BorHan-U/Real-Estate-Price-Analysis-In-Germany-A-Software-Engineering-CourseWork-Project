@@ -1,4 +1,5 @@
 import pandas as pd
+import argparse
 
 def drop_columns_with_zero_threshold(data, threshold):
     """
@@ -38,3 +39,24 @@ def drop_columns_with_zero_threshold(data, threshold):
         print(f"Dropped columns: {', '.join(columns_to_drop)}")
     
     return data
+
+def main():
+    parser = argparse.ArgumentParser(description="Drop columns from a DataFrame where the number of zero values exceeds a given threshold.")
+    parser.add_argument("file", type=str, help="Path to the input CSV file.")
+    parser.add_argument("threshold", type=int, help="Threshold for the maximum allowed number of zero values in a column.")
+    parser.add_argument("--output", type=str, default="filtered_data.csv", help="Path to save the filtered CSV file.")
+
+    args = parser.parse_args()
+
+    # Read the data from the CSV file
+    data = pd.read_csv(args.file)
+
+    # Apply the column dropping based on zero values
+    filtered_data = drop_columns_with_zero_threshold(data, args.threshold)
+
+    # Save the filtered data to a CSV file
+    filtered_data.to_csv(args.output, index=False)
+    print(f"Filtered data saved to {args.output}")
+
+if __name__ == "__main__":
+    main()
