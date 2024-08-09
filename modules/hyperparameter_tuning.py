@@ -1,28 +1,48 @@
-from sklearn.model_selection import GridSearchCV
-from sklearn.exceptions import NotFittedError, ValidationError
+"""
+This module provides functionality to perform hyperparameter tuning using
+GridSearchCV for multiple models.
+
+Functions:
+- hyperparameter_tuning: Perform hyperparameter tuning using GridSearchCV
+  for multiple models.
+- main: Parses command-line arguments and performs hyperparameter tuning
+  on the specified models and parameter grids.
+"""
+
 import argparse
 import joblib
 import pandas as pd
-from sklearn.model_selection import train_test_split
+from sklearn.exceptions import NotFittedError
+from sklearn.model_selection import GridSearchCV
+
 
 def hyperparameter_tuning(models, param_grids, X_train, y_train):
     """
     Perform hyperparameter tuning using GridSearchCV for multiple models.
 
-    Parameters:
-    models: List of tuples where each tuple contains the model name (str) and the model instance.
-    param_grids: List of dictionaries with parameter names (str) as keys and lists of parameter settings to try as values.
-    X_train: Training data features.
-    y_train: Training data labels.
+    Parameters
+    ----------
+    models : list of tuples
+        List of tuples where each tuple contains the model name (str) and the model instance.
+    param_grids : list of dict
+        List of dictionaries with parameter names (str) as keys and lists of parameter settings to try as values.
+    X_train : pd.DataFrame
+        Training data features.
+    y_train : pd.DataFrame
+        Training data labels.
 
-    Returns:
-    best_models: Dictionary with model names as keys and the best found models as values.
-    best_params: Dictionary with model names as keys and the best found parameters as values.
+    Returns
+    -------
+    best_models : dict
+        Dictionary with model names as keys and the best found models as values.
+    best_params : dict
+        Dictionary with model names as keys and the best found parameters as values.
 
-    Raises:
-    ValueError: If models and param_grids are empty or of different lengths.
+    Raises
+    ------
+    ValueError
+        If models and param_grids are empty or of different lengths.
     """
-
     if not models or not param_grids:
         raise ValueError("The 'models' and 'param_grids' lists must not be empty.")
 
@@ -34,25 +54,41 @@ def hyperparameter_tuning(models, param_grids, X_train, y_train):
 
     for (name, model), param_grid in zip(models, param_grids):
         print(f"Tuning hyperparameters for {name}...")
-        
+
         try:
-            grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=3, scoring='neg_mean_squared_error',
-                                       n_jobs=-1, verbose=2)
+            grid_search = GridSearchCV(
+                estimator=model, param_grid=param_grid, cv=3,
+                scoring='neg_mean_squared_error', n_jobs=-1, verbose=2
+            )
             grid_search.fit(X_train, y_train)
-            
+
             best_models[name] = grid_search.best_estimator_
             best_params[name] = grid_search.best_params_
-            
+
             print(f"Best parameters for {name}: {grid_search.best_params_}")
-        except (ValueError, NotFittedError, ValidationError) as e:
-            print(f"Error during hyperparameter tuning for {name}: {e}")
+        except (ValueError, NotFittedError) as exc:
+            print(f"Error during hyperparameter tuning for {name}: {exc}")
             best_models[name] = None
             best_params[name] = None
 
     return best_models, best_params
 
+
 def main():
-    parser = argparse.ArgumentParser(description="Perform hyperparameter tuning using GridSearchCV for multiple models.")
+    """
+    Parses command-line arguments and performs hyperparameter tuning
+    using GridSearchCV for multiple models.
+
+    The best models and parameters are saved to joblib files.
+
+    Raises
+    ------
+    SystemExit
+        If the command-line arguments are invalid.
+    """
+    parser = argparse.ArgumentParser(
+        description="Perform hyperparameter tuning using GridSearchCV for multiple models."
+    )
     parser.add_argument("X_train_file", type=str, help="Path to the CSV file containing the training features.")
     parser.add_argument("y_train_file", type=str, help="Path to the CSV file containing the training labels.")
     parser.add_argument("models_file", type=str, help="Path to the joblib file containing the models to be tuned.")
@@ -79,6 +115,7 @@ def main():
 
     print(f"Best models saved to {args.output_models}")
     print(f"Best parameters saved to {args.output_params}")
+
 
 if __name__ == "__main__":
     main()
