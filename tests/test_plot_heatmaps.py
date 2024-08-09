@@ -1,3 +1,4 @@
+# test_plot_heatmaps.py
 """
 Unit tests for plot_heatmaps module.
 """
@@ -6,6 +7,10 @@ import unittest
 import pandas as pd
 import sys
 import os
+
+# Set the matplotlib backend to 'Agg' for testing
+import matplotlib
+matplotlib.use('Agg')
 
 # Add the parent directory of 'modules' to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))

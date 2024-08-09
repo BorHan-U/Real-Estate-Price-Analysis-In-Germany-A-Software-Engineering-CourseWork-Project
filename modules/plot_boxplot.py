@@ -69,7 +69,8 @@ def plot_boxplot(df, x_column, y_column, output_dir):
 
     try:
         os.makedirs(output_dir, exist_ok=True)
-        plt.savefig(os.path.join(output_dir, name))
+        fig.tight_layout()
+        fig.savefig(os.path.join(output_dir, name))
         print(f"Boxplot saved as {os.path.join(output_dir, name)}")
     except OSError as exc:
         raise PlotSaveError(f"Error saving the boxplot: {exc}") from exc
