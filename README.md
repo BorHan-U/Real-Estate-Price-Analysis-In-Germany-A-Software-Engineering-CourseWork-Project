@@ -208,7 +208,7 @@ If you wish to contribute to the project, please review the  [contribution guide
 For any inquiries, please contact us at:
 
 - [Md Borhan Uddin](md.borhan.uddin@uni-potsdam.de)
-- [Name 2](mailto:philipp.entress@example.com)
+- [Name 2]()
 - [Name 3](mailto:max.nowaczyk@example.com)
 - [Name 4](mailto:tauqeer.rumaney@example.com)
 - [Namae 5](mailto:tim.werner@example.com)
