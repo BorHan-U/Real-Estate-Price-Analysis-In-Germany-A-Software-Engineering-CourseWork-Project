@@ -9,15 +9,15 @@ Authors: Aijaz Afzaal Ahmed, Jayed Akbar Sumon, Md Borhan Uddin, Mohammad Hasan,
 ## Table of contents
 - [Introduction](#ntroduction)
 - [Usage](#usage)
-    - [Package](#packagerequirement)
-    - [Running the Workflow](#runningtheworkflow)
+    - [Package](#package-requirement)
+    - [Running the Workflow](#running-the-workflow)
     - [Testing](#testing)
-    - [Integrating and Using Snakemake](#integratingandusingsnakemake)
-- [Directory Structure](#directorystructure)
+    - [Integrating and Using Snakemake](#integrating-and-usingsnakemake)
+- [Directory Structure](#directory-structure)
 - [Functions](#functions)
-    - [Examples Usage of Function](#examplesusageoffunction)
-- [Contributing Guidelines](#contributingguidelines)
-- [Contact Information](#contactinformation)
+    - [Examples Usage of Function](#examples-usage-of-function)
+- [Contributing Guidelines](#contributing-guidelines)
+- [Contact Information](#contact-information)
 - [Citation](#citation)
 - [License](#license)
 
@@ -29,9 +29,9 @@ Finding a house becomes a daunting task in many countries including germany. To 
 
 Ensure you have the following prerequisites installed on your system:
 
-- Python3: [For environment management](https://www.python.org/downloads/)
-- Snakemake: [For workflow management.](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
-- VSCode: [For IDE, can be chosen on preference](https://code.visualstudio.com/download)
+- [Python3](https://www.python.org/downloads/): For environment management
+- [Snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html): For workflow management.
+- [VSCode] (https://code.visualstudio.com/download): For IDE, can be chosen on preference
 
 ## Package Requirement
 The script requires the following Python packages:
