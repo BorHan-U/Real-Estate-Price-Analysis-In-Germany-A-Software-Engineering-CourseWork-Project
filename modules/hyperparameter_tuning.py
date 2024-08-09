@@ -2,6 +2,8 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.exceptions import NotFittedError, ValidationError
 import argparse
 import joblib
+import pandas as pd
+from sklearn.model_selection import train_test_split
 
 def hyperparameter_tuning(models, param_grids, X_train, y_train):
     """
@@ -48,3 +50,35 @@ def hyperparameter_tuning(models, param_grids, X_train, y_train):
             best_params[name] = None
 
     return best_models, best_params
+
+def main():
+    parser = argparse.ArgumentParser(description="Perform hyperparameter tuning using GridSearchCV for multiple models.")
+    parser.add_argument("X_train_file", type=str, help="Path to the CSV file containing the training features.")
+    parser.add_argument("y_train_file", type=str, help="Path to the CSV file containing the training labels.")
+    parser.add_argument("models_file", type=str, help="Path to the joblib file containing the models to be tuned.")
+    parser.add_argument("param_grids_file", type=str, help="Path to the joblib file containing the parameter grids.")
+    parser.add_argument("--output_models", type=str, default="best_models.joblib", help="Path to save the best models.")
+    parser.add_argument("--output_params", type=str, default="best_params.joblib", help="Path to save the best parameters.")
+
+    args = parser.parse_args()
+
+    # Load data
+    X_train = pd.read_csv(args.X_train_file)
+    y_train = pd.read_csv(args.y_train_file)
+
+    # Load models and parameter grids
+    models = joblib.load(args.models_file)
+    param_grids = joblib.load(args.param_grids_file)
+
+    # Perform hyperparameter tuning
+    best_models, best_params = hyperparameter_tuning(models, param_grids, X_train, y_train)
+
+    # Save the best models and parameters
+    joblib.dump(best_models, args.output_models)
+    joblib.dump(best_params, args.output_params)
+
+    print(f"Best models saved to {args.output_models}")
+    print(f"Best parameters saved to {args.output_params}")
+
+if __name__ == "__main__":
+    main()
