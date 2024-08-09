@@ -57,6 +57,7 @@ def plot_categorical_columns(data, output_dir=None):
     fig, axes = plt.subplots(nrows=num_rows, ncols=6, figsize=(20, num_rows * 4))
     axes = axes.flatten()  # Flatten the axes array for easy indexing
 
+    i = -1  # Initialize i to ensure it is defined
     for i, column in enumerate(categorical_columns):
         value_counts = data[column].value_counts()
         sns.barplot(x=value_counts.index, y=value_counts.values, ax=axes[i])
@@ -66,8 +67,9 @@ def plot_categorical_columns(data, output_dir=None):
         axes[i].tick_params(axis='x', rotation=45)
 
     # Hide any unused axes
-    for j in range(i + 1, len(axes)):
-        axes[j].set_visible(False)
+    if i >= 0:  # Ensure the loop has executed at least once
+        for j in range(i + 1, len(axes)):
+            axes[j].set_visible(False)
 
     fig.tight_layout()
 
