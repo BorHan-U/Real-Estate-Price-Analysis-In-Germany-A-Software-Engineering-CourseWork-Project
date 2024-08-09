@@ -72,8 +72,11 @@ def main():
         If the command-line arguments are invalid.
     """
     parser = argparse.ArgumentParser(
-        description="Drop columns from a DataFrame where the number of zero values exceeds a given threshold."
+    description=(
+        "Drop columns from a DataFrame where the number of zero values "
+        "exceeds a given threshold."
     )
+)
     parser.add_argument("file", type=str, help="Path to the input CSV file.")
     parser.add_argument(
         "threshold", type=int,
