@@ -157,11 +157,11 @@ project/
 ├── workflow/
 │   ├── rules
 │   │   └── analyze.smk
-│   │    └── evaluate.smk
-│   │    └── preprocess.smk
+│   │   └── evaluate.smk
+│   │   └── preprocess.smk
 │   ├── scripts
 │   │   └── analyze_data
-│   │    └── evaluate_models.py
+│   │   └── evaluate_models.py
 │   │   └── preprocess_data
 ├── results/
 │   ├── plot_preprocessing
@@ -207,11 +207,11 @@ If you wish to contribute to the project, please review the  [contribution guide
 
 For any inquiries, please contact us at:
 
-- [Md Borhan Uddin](md.borhan.uddin@uni-potsdam.de)
-- [Name 2]()
-- [Name 3](mailto:max.nowaczyk@example.com)
-- [Name 4](mailto:tauqeer.rumaney@example.com)
-- [Namae 5](mailto:tim.werner@example.com)
+- [Jayed Akbar Sumon](mailto:jayed.akbar.sumon@uni-potsdam.de)
+- [Aijaz Afzaal Ahmed](mailto:aijaz.ahmed@uni-potsdam.de)
+- [Md Borhan Uddin](mailto:md.borhan.uddin@uni-potsdam.de)
+- [Mohammad Hasan](mailto:hasan3@uni-potsdam.de)
+- [Md Raju Ahmed](mailto:ahmed10@uni-potsdam.de)
 
 ## Citation
 
