@@ -1,6 +1,8 @@
 import os
 import matplotlib.pyplot as plt
 import seaborn as sns
+import pandas as pd
+import argparse
 
 def plot_boxplot(df, x_column, y_column, output_dir):
     """
@@ -51,5 +53,22 @@ def plot_boxplot(df, x_column, y_column, output_dir):
     except Exception as e:
         raise Exception(f"Error saving the boxplot: {e}")
     
-    #plt.show()  
+    #plt.show()
 
+def main():
+    parser = argparse.ArgumentParser(description="Plot a boxplot of specified columns in a DataFrame and save it to a file.")
+    parser.add_argument("input_file", type=str, help="Path to the input CSV file containing the data.")
+    parser.add_argument("x_column", type=str, help="The column name to be used for the x-axis.")
+    parser.add_argument("y_column", type=str, help="The column name to be used for the y-axis.")
+    parser.add_argument("output_dir", type=str, help="The directory where the plot will be saved.")
+
+    args = parser.parse_args()
+
+    # Load the data from the CSV file
+    df = pd.read_csv(args.input_file)
+
+    # Plot the boxplot
+    plot_boxplot(df, args.x_column, args.y_column, args.output_dir)
+
+if __name__ == "__main__":
+    main()
