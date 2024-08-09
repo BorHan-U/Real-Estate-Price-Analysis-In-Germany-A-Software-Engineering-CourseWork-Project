@@ -1,13 +1,16 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+import argparse
+import os
 
-def plot_categorical_columns(data):
+def plot_categorical_columns(data, output_dir=None):
     """
     Plots bar charts for the value counts of each categorical column in the DataFrame.
 
     Args:
         data (pd.DataFrame): The DataFrame containing the data.
+        output_dir (str): The directory where the plots will be saved. If None, plots are displayed.
 
     Raises:
         ValueError: If the DataFrame is empty or if all columns are non-categorical.
@@ -41,4 +44,27 @@ def plot_categorical_columns(data):
         axes[j].set_visible(False)
     
     plt.tight_layout()
-    # plt.show()
+    
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+        plot_file = os.path.join(output_dir, "categorical_columns_plots.png")
+        plt.savefig(plot_file)
+        print(f"Plots saved to {plot_file}")
+    else:
+        plt.show()
+
+def main():
+    parser = argparse.ArgumentParser(description="Plot bar charts for categorical columns in a DataFrame.")
+    parser.add_argument("input_file", type=str, help="Path to the input CSV file containing the data.")
+    parser.add_argument("--output_dir", type=str, default=None, help="Directory where the plots will be saved. If not specified, plots will be shown.")
+    
+    args = parser.parse_args()
+
+    # Load the data from the CSV file
+    data = pd.read_csv(args.input_file)
+
+    # Plot the categorical columns
+    plot_categorical_columns(data, args.output_dir)
+
+if __name__ == "__main__":
+    main()
