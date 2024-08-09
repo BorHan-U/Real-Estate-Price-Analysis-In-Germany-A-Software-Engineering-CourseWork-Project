@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import argparse
 
 def apply_1_plus_log_transformation(data, columns_to_transform):
     """
@@ -31,3 +32,24 @@ def apply_1_plus_log_transformation(data, columns_to_transform):
             raise
 
     return transformed_data
+
+def main():
+    parser = argparse.ArgumentParser(description="Apply log(1 + x) transformation to specified columns in a DataFrame.")
+    parser.add_argument("file", type=str, help="Path to the input CSV file.")
+    parser.add_argument("columns", nargs='+', type=str, help="Columns to apply the log(1 + x) transformation to.")
+    parser.add_argument("--output", type=str, default="transformed_data.csv", help="Path to save the transformed CSV file.")
+
+    args = parser.parse_args()
+
+    # Read the data from the CSV file
+    data = pd.read_csv(args.file)
+
+    # Apply the log(1 + x) transformation
+    transformed_data = apply_1_plus_log_transformation(data, args.columns)
+
+    # Save the transformed data to a CSV file
+    transformed_data.to_csv(args.output, index=False)
+    print(f"Transformed data saved to {args.output}")
+
+if __name__ == "__main__":
+    main()
