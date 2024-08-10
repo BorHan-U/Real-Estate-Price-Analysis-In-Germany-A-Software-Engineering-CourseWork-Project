@@ -14,6 +14,7 @@ import joblib
 import pandas as pd
 from sklearn.exceptions import NotFittedError
 from sklearn.model_selection import GridSearchCV
+from sklearn.base import BaseEstimator
 
 
 def hyperparameter_tuning(models, param_grids, X_train, y_train):
@@ -26,9 +27,9 @@ def hyperparameter_tuning(models, param_grids, X_train, y_train):
         List of tuples where each tuple contains the model name (str) and the model instance.
     param_grids : list of dict
         List of dictionaries with parameter names (str) as keys and lists of parameter settings to try as values.
-    X_train : pd.DataFrame
+    X_train : pd.DataFrame or np.ndarray
         Training data features.
-    y_train : pd.DataFrame
+    y_train : pd.Series or np.ndarray
         Training data labels.
 
     Returns
@@ -56,6 +57,9 @@ def hyperparameter_tuning(models, param_grids, X_train, y_train):
         print(f"Tuning hyperparameters for {name}...")
 
         try:
+            if not isinstance(model, BaseEstimator):
+                raise ValueError(f"Model '{name}' is not a valid scikit-learn estimator.")
+
             grid_search = GridSearchCV(
                 estimator=model, param_grid=param_grid, cv=3,
                 scoring='neg_mean_squared_error', n_jobs=-1, verbose=2
@@ -66,7 +70,7 @@ def hyperparameter_tuning(models, param_grids, X_train, y_train):
             best_params[name] = grid_search.best_params_
 
             print(f"Best parameters for {name}: {grid_search.best_params_}")
-        except (ValueError, NotFittedError) as exc:
+        except (ValueError, NotFittedError, TypeError) as exc:
             print(f"Error during hyperparameter tuning for {name}: {exc}")
             best_models[name] = None
             best_params[name] = None
@@ -98,23 +102,27 @@ def main():
 
     args = parser.parse_args()
 
-    # Load data
-    X_train = pd.read_csv(args.X_train_file)
-    y_train = pd.read_csv(args.y_train_file)
+    try:
+        # Load data
+        X_train = pd.read_csv(args.X_train_file)
+        y_train = pd.read_csv(args.y_train_file).squeeze()  # Convert to Series
 
-    # Load models and parameter grids
-    models = joblib.load(args.models_file)
-    param_grids = joblib.load(args.param_grids_file)
+        # Load models and parameter grids
+        models = joblib.load(args.models_file)
+        param_grids = joblib.load(args.param_grids_file)
 
-    # Perform hyperparameter tuning
-    best_models, best_params = hyperparameter_tuning(models, param_grids, X_train, y_train)
+        # Perform hyperparameter tuning
+        best_models, best_params = hyperparameter_tuning(models, param_grids, X_train, y_train)
 
-    # Save the best models and parameters
-    joblib.dump(best_models, args.output_models)
-    joblib.dump(best_params, args.output_params)
+        # Save the best models and parameters
+        joblib.dump(best_models, args.output_models)
+        joblib.dump(best_params, args.output_params)
 
-    print(f"Best models saved to {args.output_models}")
-    print(f"Best parameters saved to {args.output_params}")
+        print(f"Best models saved to {args.output_models}")
+        print(f"Best parameters saved to {args.output_params}")
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        raise
 
 
 if __name__ == "__main__":

@@ -10,10 +10,12 @@ Functions:
 """
 
 import argparse
+from typing import Union
 import pandas as pd
+import numpy as np
 
 
-def delete_columns_with_zero_data(data, threshold):
+def delete_columns_with_zero_data(data: pd.DataFrame, threshold: int) -> pd.DataFrame:
     """
     Deletes columns from a DataFrame where the number of zero values exceeds a given threshold.
 
@@ -31,9 +33,17 @@ def delete_columns_with_zero_data(data, threshold):
 
     Raises
     ------
+    TypeError
+        If the input data is not a pandas DataFrame or threshold is not an integer.
     ValueError
         If the DataFrame is empty or the threshold is negative.
     """
+    if not isinstance(data, pd.DataFrame):
+        raise TypeError("Input data must be a pandas DataFrame.")
+    
+    if not isinstance(threshold, int):
+        raise TypeError("Threshold must be an integer.")
+
     if data.empty:
         raise ValueError("The DataFrame is empty.")
 
@@ -44,7 +54,7 @@ def delete_columns_with_zero_data(data, threshold):
 
     for column in data.columns:
         if pd.api.types.is_numeric_dtype(data[column]):
-            zero_count = (data[column] == 0).sum()
+            zero_count = (data[column] == 0).sum() + data[column].isna().sum()
             if zero_count > threshold:
                 columns_to_drop.append(column)
         else:
@@ -56,10 +66,14 @@ def delete_columns_with_zero_data(data, threshold):
     else:
         print("No columns were dropped.")
 
+    # If all columns were dropped, return an empty DataFrame with the original index
+    if len(data.columns) == 0:
+        return pd.DataFrame(index=data.index)
+
     return data
 
 
-def main():
+def main() -> None:
     """
     Parses command-line arguments and deletes columns from a DataFrame
     where zero values exceed a given threshold.
@@ -86,15 +100,30 @@ def main():
 
     args = parser.parse_args()
 
-    # Read the data from the CSV file
-    data = pd.read_csv(args.file)
+    try:
+        # Read the data from the CSV file
+        data = pd.read_csv(args.file)
+    except FileNotFoundError:
+        print(f"Error: The file '{args.file}' was not found.")
+        return
+    except pd.errors.EmptyDataError:
+        print(f"Error: The file '{args.file}' is empty.")
+        return
+    except Exception as e:
+        print(f"Error reading the file: {str(e)}")
+        return
 
-    # Apply the column deletion based on zero values
-    filtered_data = delete_columns_with_zero_data(data, args.threshold)
+    try:
+        # Apply the column deletion based on zero values
+        filtered_data = delete_columns_with_zero_data(data, args.threshold)
 
-    # Save the filtered data to a CSV file
-    filtered_data.to_csv(args.output, index=False)
-    print(f"Filtered data saved to {args.output}")
+        # Save the filtered data to a CSV file
+        filtered_data.to_csv(args.output, index=False)
+        print(f"Filtered data saved to {args.output}")
+    except (TypeError, ValueError) as e:
+        print(f"Error: {str(e)}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {str(e)}")
 
 
 if __name__ == "__main__":
