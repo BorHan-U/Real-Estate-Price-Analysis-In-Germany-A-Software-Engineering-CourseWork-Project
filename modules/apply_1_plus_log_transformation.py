@@ -48,11 +48,11 @@ def apply_1_plus_log_transformation(data, columns_to_transform):
     for column in columns_to_transform:
         if column not in transformed_data.columns:
             raise ValueError(f"Column '{column}' is not in the DataFrame.")
-        
+
         # Check if the column contains any non-numeric data
         if not pd.api.types.is_numeric_dtype(transformed_data[column]):
             raise ValueError(f"Column '{column}' contains non-numeric data.")
-        
+
         # Apply the log(1 + x) transformation
         transformed_data[column] = np.log1p(transformed_data[column])
 

@@ -58,7 +58,7 @@ def separate_categorical_numerical(data):
                 "It will be ignored."
             )
 
-    return categorical_cols, numerical_cols
+    return numerical_cols
 
 
 def main():

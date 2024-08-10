@@ -1,10 +1,37 @@
+"""
+This script preprocesses house pricing data by cleaning and transforming it for further analysis.
+
+The preprocessing steps include:
+- Dropping unnecessary columns.
+- Mapping quality ratings to numerical values.
+- Counting and handling missing data.
+- Separating categorical and numerical data.
+- Generating histograms of numerical data before and after cleaning.
+- Applying log transformations to selected numerical columns.
+
+The script requires an input CSV file with house pricing data and
+outputs a cleaned CSV file along with histograms of the data.
+
+Usage:
+    python preprocess_script.py <input_file> <output_file> <output_dir>
+
+Arguments:
+- input_file: Path to the input CSV file containing the raw data.
+- output_file: Path where the cleaned data will be saved.
+- output_dir: Directory where histogram plots will be saved.
+
+This script uses pandas for data manipulation and matplotlib for generating histograms.
+
+Example:
+    python preprocess_script.py data/raw_data.csv data/cleaned_data.csv plots/
+"""
+# Add the root directory to the Python path
+import argparse
 import os
 import sys
 import pandas as pd
 import matplotlib.pyplot as plt
-import argparse
 
-# Add the root directory to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
 from modules.count_null_data import count_null_data
@@ -13,7 +40,15 @@ from modules.separate_categorical_numerical import separate_categorical_numerica
 from modules.drop_columns_with_zero_threshold import drop_columns_with_zero_threshold
 from modules.apply_1_plus_log_transformation import apply_1_plus_log_transformation
 
+
 def preprocess_data(input_file, output_file, output_dir):
+    """
+    Preprocess the data by cleaning and transforming it for further analysis.
+    Args:
+        input_file (str): Path to the input CSV file.
+        output_file (str): Path to save the preprocessed CSV file.
+        output_dir (str): Directory to save the plots.
+    """
     data = pd.read_csv(input_file)
 
     # Preprocessing steps
@@ -44,13 +79,13 @@ def preprocess_data(input_file, output_file, output_dir):
     data = delete_columns_with_zero_data(data, threshold)
 
     count_null_data(data)
-    categorical_cols, numerical_cols = separate_categorical_numerical(data)
+    numerical_cols = separate_categorical_numerical(data)
 
     numerical_data = data[numerical_cols].copy()
 
     plt.figure(figsize=(16, 20))
     numerical_data.hist(bins=50, xlabelsize=8, ylabelsize=8)
-    plt.savefig(f'{output_dir}/numerical_data_histogram_plot.png')
+    plt.savefig(os.path.join(output_dir, 'numerical_data_histogram_plot.png'))
     plt.close()
 
     column_to_delete = ['GarageQual', 'GarageCond', 'GarageYrBlt']
@@ -60,18 +95,19 @@ def preprocess_data(input_file, output_file, output_dir):
     numerical_data = drop_columns_with_zero_threshold(numerical_data, threshold_0)
 
     numerical_data.hist(bins=50, xlabelsize=8, ylabelsize=8)
-    plt.savefig(f'{output_dir}/after_cleaning_numericalData_histogram_plot.png')
+    plt.savefig(os.path.join(output_dir, 'after_cleaning_numericalData_histogram_plot.png'))
     plt.close()
 
     columns_to_transform = ['1stFlrSF', 'GrLivArea', 'LotArea', 'SalePrice']
     transformed_data = apply_1_plus_log_transformation(numerical_data, columns_to_transform)
 
     transformed_data.hist(bins=50, xlabelsize=8, ylabelsize=8)
-    plt.savefig(f'{output_dir}/transformed_data_histogram_plot.png')
+    plt.savefig(os.path.join(output_dir, 'transformed_data_histogram_plot.png'))
     plt.close()
 
     # Save the preprocessed data
     transformed_data.to_csv(output_file, index=False)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Preprocess house pricing data.")
