@@ -3,21 +3,22 @@ include: "workflow/rules/preprocess.smk"
 include: "workflow/rules/analyze.smk"
 include: "workflow/rules/evaluate.smk"
 
-
+RESULT_PLOT_PREPROCESSING_DIR = "results/plot_preprocessing"
+RESULT_EVALUATION_MODEL_DIR = "results/evaluation_model"
 # Rule to ensure that all targets are included
 rule all:
     input:
-        "results/plot_preprocessing/analysis_complete.txt",
-        "results/evaluation_model/metrics.csv"
+        f"{RESULT_PLOT_PREPROCESSING_DIR}/analysis_complete.txt",
+        f"{RESULT_EVALUATION_MODEL_DIR}/metrics.csv"
 # Rule to create necessary directories before processing
 rule create_directories:
     output:
-        directory("results/plot_preprocessing"),
-        directory("results/evaluation_model")
+        directory(f"{RESULT_PLOT_PREPROCESSING_DIR}"),
+        directory(f"{RESULT_EVALUATION_MODEL_DIR}")
     run:
         import os
-        os.makedirs("results/plot_preprocessing", exist_ok=True)
-        os.makedirs("results/evaluation_model", exist_ok=True)
+        os.makedirs(f"{RESULT_PLOT_PREPROCESSING_DIR}", exist_ok=True)
+        os.makedirs(f"{RESULT_EVALUATION_MODEL_DIR}", exist_ok=True)
 
 # Rule to handle preprocessing results
 rule preprocess_target:
@@ -27,12 +28,12 @@ rule preprocess_target:
 # Rule to handle analysis results
 rule analyze_target:
     input:
-        "results/plot_preprocessing/analysis_complete.txt"
+        f"{RESULT_PLOT_PREPROCESSING_DIR}/analysis_complete.txt"
 
 # Rule to handle evaluation results
 rule evaluate_target:
     input:
-        "results/evaluation_model/metrics.csv"
+        f"{RESULT_EVALUATION_MODEL_DIR}/metrics.csv"
 
 # Cleanup rule to remove results directories using Python for cross-platform compatibility
 rule cleanup:
@@ -57,8 +58,8 @@ rule cleanup:
                 print(f"File not found: {file_path}")
         
         # Remove files from the specified directories
-        remove_files('results/plot_preprocessing')
-        remove_files('results/evaluation_model')
+        remove_files(f"{RESULT_PLOT_PREPROCESSING_DIR}")
+        remove_files(f"{RESULT_EVALUATION_MODEL_DIR}")
         
         # Remove the specific file from the data folder
         remove_file('data/preprocessed_data.csv')
