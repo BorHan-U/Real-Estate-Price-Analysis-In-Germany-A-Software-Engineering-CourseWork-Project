@@ -1,5 +1,9 @@
 # Functional and non-function requirements of the project "Real Estate Price Analysis"
 
+## Requirement Definition
+
+This document details the functional and non-functional requirements for the project, aiming to provide a comprehensive specification that ensures the workflow meets essential criteria for data management, analytical processing, data transformation, result generation, and automation.
+
 ## Functional requirements:
 
 1. Data Collection
@@ -12,7 +16,7 @@
 - Handle missing data, outliers, and categorical variables.
 - Split the dataset into training and testing sets.
 
-1. Exploratory Data Analysis (EDA):
+3. Exploratory Data Analysis (EDA):
 
 - Provide statistical summaries of different variables.
 - Generate visualizations such as boxplot, heatmap, and correlation matrices.
@@ -24,7 +28,7 @@
 
 UML diagram:
 
-![UML diagram of the EDA](UML_diagram.png)
+![Activity diagram of the EDA](activity_diagram.svg)
 
 ## Non-Functional Requirements:
 
@@ -37,16 +41,16 @@ UML diagram:
 - Efficiently handle large datasets.
 - Provide fast response times during model training and prediction.
 
-2. Reliability:
+3. Reliability:
 
 - Produce consistent and repeatable results across different runs.
 
-3. Maintainability:
+4. Maintainability:
 
 - Well-structured code and easy to understand.
 - Easy to modify for future enhancements.
 
-3. Documentation:
+5. Documentation:
 
 - All functions and modules should be well-documented.
 - Provide a comprehensive user manual or guide.
