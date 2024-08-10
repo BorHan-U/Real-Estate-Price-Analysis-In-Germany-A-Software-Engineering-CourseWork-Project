@@ -25,6 +25,17 @@ Authors: Aijaz Afzaal Ahmed, Jayed Akbar Sumon, Md Borhan Uddin, Mohammad Hasan,
 ## Introduction
 Finding a house becomes a daunting task in many countries including germany. To alleviate this problem, we aim to develop a machine learning model to predict the real estate (housing) prices while using several input parameters as the base for our prediction. It seeks to explore and identify the key factors influencing property prices using an extensive dataset of property attributes. In brief, by employing Exploratory data analysis, the result uncovered visualizations, patterns and correlations within the data, ultimately predicting sale prices and highlighting the most influential factors.
 
+## User Stories
+As a student researcher, we want to perform exploratory data analysis on the housing dataset and implement feature engineering techniques, so that we can identify key factors influencing house prices and improve the predictive power of our model.
+
+As a project team member, we want to develop and compare multiple machine learning models (e.g., linear regression, random forest, gradient boosting) for house price prediction, so that we can select the most effective algorithm and demonstrate our understanding of advanced regression techniques.
+
+As a data science student, we want to implement cross-validation techniques and analyze our model for potential biases, so that we can ensure the reliability, generalizability, and fairness of our house price predictions.
+
+As a team member responsible for data visualization and presentation, we want to create insightful graphs and charts and prepare a clear summary of our methodology and results, so that we can effectively communicate our findings to professors and peers during the final presentation.
+
+As a project coordinator, we want to set up a version control system for our code and documentation and discuss potential real-world applications of our house price prediction model, so that we can collaborate effectively throughout the project and demonstrate its practical relevance to the real estate industry.
+
 ## Usage
 
 Ensure you have the following prerequisites installed on your system:
@@ -50,53 +61,81 @@ The script requires the following Python packages:
 
 You can install these packages by running the following command.
 
-```
+```sh
 pip install -r requirements.txt
 ```
 
 
 ## Running the Workflow
 
-The script requires two input files: house.py and train.csv. Place these files in the data directory of your project. Then, run the following command to execute the preprocessing script:
+For the first run, please create the result folder running the following command:
 
+```sh
+snakemake --cores all create_directories
 ```
-python bin/house-price.py data/train.csv
+After creating `results` directory, to run the entire workflow, execute the following command from the root directory of the repository:
+
+```sh
+snakemake --cores all
 ```
 
-The script will perform the following steps:
+To clean up the results (plots, .txt files in results folder), run the following command:
 
-1. Data Preprocessing: The script performs data preprocessing, including handling missing values and transforming numerical features.
-2. Data Visualization: It generates histograms and box plots to visualize the data distribution and relationships between variables.
-3. Model Evaluation: The script evaluates multiple machine learning models (Linear Regression, Random Forest, and LGBM) and provides Mean Squared Error (MSE) and R-squared scores.
-4. Results: The evaluation results are saved in the results/ directory, including yPred*yTrue_table*{model_name}.txt files.
+```sh
+snakemake --cores all cleanup
+```
+
+Note: If the results folder already contains necessary files then the workflow will not rerun, instead it will show that there is nothing to execute as the expected files are already available in the results folder. So, for fresh rerun cleanup first using cleanup script.
+
+## Running Specific Steps
+There are three individual steps in the porject.
+1. Preprocessing the data
+2. Analysis of the data 
+3. Model evaluation
+
+These steps can be run individually. As the steps are internally dependedent on each other, before running step 2 or 3, please first run the fir step which is `Preprocess_data`.
+
+To run the `Preprocess_data` step, the command is as follows,
+
+```sh
+snakemake --cores all preprocess_target
+```
+Then  for other two steps, the commands are:
+```sh
+snakemake --cores all analyze_target
+```
+and
+```sh
+snakemake --cores all evaluate_target
+```
+
 
 ## Testing
+For testing, run the following command from root directory
 
-Testing is being done either on its own with pytest:
-
-```
-pytest .\modules\test_model_evaluation.py .\modules\test.py
+```sh
+pytest
 ```
 
 this just give the test results and if any of them failed or passed.
 
 For combination of coverage with testing we are using:
 
-```
-coverage run -m pytest .\modules\test_model_evaluation.py .\modules\test.py
+```sh
+coverage run -m pytest 
 ```
 
 from the project directory.
 
 This gives us a .coverage file. It can be used to display the results with either:
 
-```
+```sh
 coverage report -m
 ```
 
 for a console result or
 
-```
+```sh
 coverage html
 ```
 
@@ -106,22 +145,39 @@ which will create a htmlcov folder containing an `index.html` file that can be o
 This project uses Snakemake to manage and automate the data preprocessing and model evaluation workflows. Snakemake ensures that the steps in the workflow are executed in the correct order and only re-executed if necessary. Below are instructions on how to set up and run Snakemake for this project.
 
 Before you can use Snakemake, ensure you have the following installed:
-```
+```sh
 pip install snakemake
 ```
 To run the workflow, navigate to the directory containing the Snakefile and run Snakemake:
+```sh
+snakemake --cores  all
 ```
-snakemake --cores 1
+
+### Command Line Interface (CLI) Usage
+
+The files in the `modules` folder can be executed directly from the command line. Below are the instructions for running each script:
+
+### count_null_data.py
+Counts and prints the number of missing values in each column of the dataset.
+
+```sh
+python modules/count_null_data.py data/train.csv
 ```
+
+### delete_columns_with_zero_data.py
+Removes columns with a high number of zero values from the dataset.
+
+```sh
+python modules/drop_columns_with_zero_threshold.py data/train.csv 400 --output data/filtered_data_for_zero_threshold.csv
+```
+Use the above scripts structure to and proper function arguments for the other files.
+
 ## Directory Structure
 
 Make sure your project directory has the following structure:
 
 ```
 project/
-├── bin/
-│   ├── house-price.py
-│   └── house-price-analysis.ipynb
 ├── data/
 │   ├── train.csv
 │   └── data_desciption.txt
@@ -130,9 +186,16 @@ project/
 │   ├── component_analysis.pdf
 │   └── requirements.md   
 ├── modules/
-│   ├── modules.py
-│   ├── test_model_evaluation.py
-│   └── test.py
+│   └── apply_1_plus_log_transformation.py 
+│   ├── count_null_data.py
+│   └── delete_columns_with_zero_data.py
+│   ├── drop_columns_with_zero_threshold.py
+│   └── hyperparameter_tuning.p
+│   ├── model_evaluation.py
+│   └── plot_boxplot.py 
+│   ├── plot_categorical_columns.py
+│   └── plot_heatmaps.py
+│   ├── separate_categorical_numerical.py
 ├── package/
 │   ├── build/
 │   │   └── bin/
@@ -142,8 +205,6 @@ project/
 │   ├── House_Prices.egg-info/
 │   └── setup.py
 ├── tests/
-│   ├── output_dir
-│   ├── output.csv
 │   └── test_apply_1_plus_log_transformation.py 
 │   ├── test_count_null_data.py
 │   └── test_delete_columns_with_zero_data.py
@@ -160,9 +221,9 @@ project/
 │   │   └── evaluate.smk
 │   │   └── preprocess.smk
 │   ├── scripts
-│   │   └── analyze_data
+│   │   └── analyze_data.py
 │   │   └── evaluate_models.py
-│   │   └── preprocess_data
+│   │   └── preprocess_data.py
 ├── results/
 │   ├── plot_preprocessing
 │   │   └── [<graph>.png]
@@ -179,7 +240,6 @@ project/
 └── requirements.txt
 
 ```
-Feel free to modify the project structure and adjust the code according to your specific requirements.
 
 
 ## Functions
@@ -196,9 +256,6 @@ The modules.py script contains utility functions used by the house-price.py scri
     <li><b>model_evaluation</b>: Evaluates machine learning models with hyperperameter tuning and returns the Mean Squared Error (MSE) and R-squared scores.</li>
 </ul>
 
-## Examples Usage of Function
-
-Example usage of functions in the `modules.py` script can be found in the [`house-price.py`](bin/house-price.py) script.
 
 ## Contributing Guidelines
 If you wish to contribute to the project, please review the  [contribution guidelines](CONTRIBUTING.md) and the  [code of conduct](CONDUCT.md) . By participating, you are expected to adhere to these guidelines.
@@ -220,3 +277,5 @@ For information on how to cite this project, please refer to the [Citation file]
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE.txt) file for details.
+Sure, I can help you with that. To call the scripts in the `modules` folder from the command line, you can create a section in your README.md that explains how to do this. Here is an example of how you can structure this section:
+
