@@ -14,6 +14,8 @@ def analyze_data(input_file, output_dir, selected_column):
     
     # Analysis step: Generate boxplot with the specified column against 'SalePrice'
     plot_boxplot(data, selected_column, 'SalePrice', output_dir)
+    # Heatmap by calling data from modules
+    plot_heatmaps(data, output_dir)
     
     with open(f'{output_dir}/analysis_complete.txt', 'w') as f:
         f.write(f"Analysis complete. Boxplot generated for {selected_column} vs SalePrice.")
