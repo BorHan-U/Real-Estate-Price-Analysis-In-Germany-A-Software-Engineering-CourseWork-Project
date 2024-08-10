@@ -39,6 +39,7 @@ rule cleanup:
     run:
         import os
         import shutil
+        
         def remove_files(directory):
             """Remove all files and directories in the specified directory."""
             for root, dirs, files in os.walk(directory, topdown=False):
@@ -46,5 +47,18 @@ rule cleanup:
                     os.remove(os.path.join(root, name))
                 for name in dirs:
                     shutil.rmtree(os.path.join(root, name))
+        
+        def remove_file(file_path):
+            """Remove the specified file if it exists."""
+            if os.path.exists(file_path):
+                os.remove(file_path)
+                print(f"Removed file: {file_path}")
+            else:
+                print(f"File not found: {file_path}")
+        
+        # Remove files from the specified directories
         remove_files('results/plot_preprocessing')
         remove_files('results/evaluation_model')
+        
+        # Remove the specific file from the data folder
+        remove_file('data/preprocessed_data.csv')
