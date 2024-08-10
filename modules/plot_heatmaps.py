@@ -9,6 +9,7 @@ Functions:
 
 import argparse
 import os
+from typing import Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -16,7 +17,11 @@ import pandas as pd
 import seaborn as sns
 
 
-def plot_heatmaps(df, output_dir):
+class PlotSaveError(Exception):
+    """Custom exception for errors during plot saving."""
+
+
+def plot_heatmaps(df: pd.DataFrame, output_dir: str) -> None:
     """
     Plot correlation matrix heatmaps from a DataFrame and save them to a file.
 
@@ -31,6 +36,8 @@ def plot_heatmaps(df, output_dir):
     ------
     ValueError
         If the DataFrame is empty or does not contain numeric columns.
+    PlotSaveError
+        If there's an error saving the plot file.
     """
     if df.empty:
         raise ValueError("The DataFrame is empty. Cannot plot heatmaps.")
@@ -65,11 +72,15 @@ def plot_heatmaps(df, output_dir):
 
     # Save the heatmap as a PNG file
     fig.tight_layout()
-    fig.savefig(os.path.join(output_dir, "Correlation_Matrix_Heatmap.png"))
-    plt.close(fig)
+    try:
+        fig.savefig(os.path.join(output_dir, "Correlation_Matrix_Heatmap.png"))
+    except Exception as e:
+        raise PlotSaveError(f"Error saving the heatmap: {e}") from e
+    finally:
+        plt.close(fig)
 
 
-def main():
+def main() -> None:
     """
     Parses command-line arguments and plots correlation matrix heatmaps
     from a DataFrame.
@@ -98,11 +109,23 @@ def main():
 
     args = parser.parse_args()
 
-    # Load the data from the CSV file
-    df = pd.read_csv(args.input_file)
+    try:
+        # Load the data from the CSV file
+        df = pd.read_csv(args.input_file)
 
-    # Plot the heatmaps
-    plot_heatmaps(df, args.output_dir)
+        # Plot the heatmaps
+        plot_heatmaps(df, args.output_dir)
+        print(f"Heatmaps saved to {args.output_dir}")
+    except FileNotFoundError:
+        print(f"Error: The file '{args.input_file}' was not found.")
+    except pd.errors.EmptyDataError:
+        print(f"Error: The file '{args.input_file}' is empty.")
+    except ValueError as ve:
+        print(f"Error: {ve}")
+    except PlotSaveError as pse:
+        print(f"Error: {pse}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
 
 if __name__ == "__main__":

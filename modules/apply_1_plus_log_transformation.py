@@ -32,24 +32,29 @@ def apply_1_plus_log_transformation(data, columns_to_transform):
 
     Raises
     ------
+    TypeError
+        If input data is not a pandas DataFrame.
     ValueError
-        If any column in columns_to_transform is not in the DataFrame.
+        If any column in columns_to_transform is not in the DataFrame or contains non-numeric data.
     """
+    if not isinstance(data, pd.DataFrame):
+        raise TypeError("Input data must be a pandas DataFrame.")
+
+    if data.empty:
+        return data.copy()
+
     transformed_data = data.copy()
 
     for column in columns_to_transform:
         if column not in transformed_data.columns:
             raise ValueError(f"Column '{column}' is not in the DataFrame.")
-        try:
-            # Handle non-numeric data types gracefully
-            transformed_data[column] = pd.to_numeric(
-                transformed_data[column], errors='coerce'
-            )
-            # Apply the log(1 + x) transformation
-            transformed_data[column] = np.log1p(transformed_data[column])
-        except Exception as exc:
-            print(f"Error applying log(1 + x) transformation to column '{column}': {exc}")
-            raise
+        
+        # Check if the column contains any non-numeric data
+        if not pd.api.types.is_numeric_dtype(transformed_data[column]):
+            raise ValueError(f"Column '{column}' contains non-numeric data.")
+        
+        # Apply the log(1 + x) transformation
+        transformed_data[column] = np.log1p(transformed_data[column])
 
     return transformed_data
 
@@ -64,7 +69,7 @@ def main():
     Raises
     ------
     SystemExit
-        If the command-line arguments are invalid.
+        If the command-line arguments are invalid or if there's an error during processing.
     """
     parser = argparse.ArgumentParser(
         description="Apply log(1 + x) transformation to specified columns in a DataFrame."
@@ -80,15 +85,19 @@ def main():
 
     args = parser.parse_args()
 
-    # Read the data from the CSV file
-    data = pd.read_csv(args.file)
+    try:
+        # Read the data from the CSV file
+        data = pd.read_csv(args.file)
 
-    # Apply the log(1 + x) transformation
-    transformed_data = apply_1_plus_log_transformation(data, args.columns)
+        # Apply the log(1 + x) transformation
+        transformed_data = apply_1_plus_log_transformation(data, args.columns)
 
-    # Save the transformed data to a CSV file
-    transformed_data.to_csv(args.output, index=False)
-    print(f"Transformed data saved to {args.output}")
+        # Save the transformed data to a CSV file
+        transformed_data.to_csv(args.output, index=False)
+        print(f"Transformed data saved to {args.output}")
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

@@ -9,6 +9,7 @@ Functions:
 
 import argparse
 import os
+from typing import Any
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -19,7 +20,7 @@ class PlotSaveError(Exception):
     """Custom exception for errors during plot saving."""
 
 
-def plot_boxplot(df, x_column, y_column, output_dir):
+def plot_boxplot(df: pd.DataFrame, x_column: str, y_column: str, output_dir: str) -> None:
     """
     Plot a boxplot of the specified columns in a DataFrame and save the plot to a file.
 
@@ -70,13 +71,16 @@ def plot_boxplot(df, x_column, y_column, output_dir):
     try:
         os.makedirs(output_dir, exist_ok=True)
         fig.tight_layout()
-        fig.savefig(os.path.join(output_dir, name))
+        plt.savefig(os.path.join(output_dir, name))
         print(f"Boxplot saved as {os.path.join(output_dir, name)}")
     except OSError as exc:
+        plt.close(fig)  # Close the figure in case of an error
         raise PlotSaveError(f"Error saving the boxplot: {exc}") from exc
+    finally:
+        plt.close(fig)  # Always close the figure
 
 
-def main():
+def main() -> None:
     """
     Parses command-line arguments and plots a boxplot of specified columns
     in a DataFrame.
@@ -112,9 +116,24 @@ def main():
 
     args = parser.parse_args()
 
-    df = pd.read_csv(args.input_file)
+    try:
+        df = pd.read_csv(args.input_file)
+    except FileNotFoundError:
+        print(f"Error: The file '{args.input_file}' was not found.")
+        return
+    except pd.errors.EmptyDataError:
+        print(f"Error: The file '{args.input_file}' is empty.")
+        return
+    except Exception as e:
+        print(f"Error reading the file: {str(e)}")
+        return
 
-    plot_boxplot(df, args.x_column, args.y_column, args.output_dir)
+    try:
+        plot_boxplot(df, args.x_column, args.y_column, args.output_dir)
+    except (ValueError, PlotSaveError) as e:
+        print(f"Error: {str(e)}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {str(e)}")
 
 
 if __name__ == "__main__":

@@ -11,6 +11,7 @@ Functions:
 
 import argparse
 import pandas as pd
+import numpy as np
 
 
 def count_null_data(data):
@@ -19,13 +20,13 @@ def count_null_data(data):
 
     Parameters
     ----------
-    data : pd.DataFrame
-        The input data as a pandas DataFrame.
+    data : pd.DataFrame or any other type
+        The input data, expected to be a pandas DataFrame.
 
-    Prints
-    ------
-    - The count of zero values and NaN values for each column with non-zero count.
-    - A message if there are no zero or NaN values.
+    Returns
+    -------
+    dict
+        A dictionary containing the counts of zero and NaN values for each column.
 
     Raises
     ------
@@ -35,27 +36,36 @@ def count_null_data(data):
     if not isinstance(data, pd.DataFrame):
         raise TypeError("Input data must be a pandas DataFrame.")
 
-    missing_counts = (data == 0).sum()  # Count zero values in each column
-    sorted_columns = missing_counts.sort_values(ascending=False)
+    result = {}
     no_missing_data = True
 
-    for column, count in sorted_columns.items():
-        # Check if the column is numeric
-        if pd.api.types.is_numeric_dtype(data[column]):
-            # Count NaN values in the column
+    for column in data.columns:
+        if pd.api.types.is_numeric_dtype(data[column]) and not pd.api.types.is_bool_dtype(data[column]):
+            zero_count = (data[column] == 0).sum()
             nan_count = data[column].isna().sum()
-            count += nan_count
-            if count > 0:
-                print(
-                    f"Column '{column}': {count} zero or NaN values "
-                    f"(0 values: {missing_counts[column]}, NaN values: {nan_count})"
-                )
+            total_count = zero_count + nan_count
+
+            if total_count > 0:
+                result[column] = {
+                    'total': total_count,
+                    'zero': zero_count,
+                    'nan': nan_count
+                }
                 no_missing_data = False
         else:
-            print(f"Column '{column}' is not numeric and was skipped.")
+            result[column] = 'skipped'
 
     if no_missing_data:
         print("There are no zero or NaN values in any numeric columns!")
+    else:
+        for column, counts in result.items():
+            if counts != 'skipped':
+                print(f"Column '{column}': {counts['total']} zero or NaN values "
+                      f"(0 values: {counts['zero']}, NaN values: {counts['nan']})")
+            else:
+                print(f"Column '{column}' is not numeric and was skipped.")
+
+    return result
 
 
 def main():
@@ -66,7 +76,7 @@ def main():
     Raises
     ------
     SystemExit
-        If the command-line arguments are invalid.
+        If the command-line arguments are invalid or if the file cannot be read.
     """
     parser = argparse.ArgumentParser(
         description="Count the number of zero and NaN values in each column of a DataFrame."
@@ -74,8 +84,18 @@ def main():
     parser.add_argument("file", type=str, help="Path to the input CSV file.")
     args = parser.parse_args()
 
-    # Read the data from the CSV file
-    data = pd.read_csv(args.file)
+    try:
+        # Read the data from the CSV file
+        data = pd.read_csv(args.file)
+    except FileNotFoundError:
+        print(f"Error: The file '{args.file}' was not found.")
+        return
+    except pd.errors.EmptyDataError:
+        print(f"Error: The file '{args.file}' is empty.")
+        return
+    except Exception as e:
+        print(f"Error reading the file: {str(e)}")
+        return
 
     # Call the count_null_data function
     count_null_data(data)
