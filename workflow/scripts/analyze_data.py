@@ -1,4 +1,5 @@
 import os
+import random
 import sys
 import pandas as pd
 import argparse
@@ -12,13 +13,16 @@ from modules.plot_heatmaps import plot_heatmaps
 def analyze_data(input_file, output_dir):
     data = pd.read_csv(input_file)
 
-    # Analysis steps
-    plot_boxplot(data, 'OverallQual', 'SalePrice', output_dir)
-    plot_boxplot(data, 'YearRemodAdd', 'SalePrice', output_dir)
-    plot_heatmaps(data, output_dir)
-
+    # Randomly select a column for the boxplot
+    columns = data.columns.tolist()
+    columns.remove('SalePrice')  # Exclude 'SalePrice' itself
+    selected_column = random.choice(columns)
+    
+    # Analysis step: Generate dynamic boxplots with the random columns against 'SalePrice'
+    plot_boxplot(data, selected_column, 'SalePrice', output_dir)
+    
     with open(f'{output_dir}/analysis_complete.txt', 'w') as f:
-        f.write("Analysis complete")
+        f.write(f"Analysis complete. Boxplot generated for {selected_column} vs SalePrice.")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Analyze house pricing data.")
