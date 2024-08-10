@@ -57,32 +57,36 @@ def plot_categorical_columns(data, output_dir=None):
     fig, axes = plt.subplots(nrows=num_rows, ncols=6, figsize=(20, num_rows * 4))
     axes = axes.flatten()  # Flatten the axes array for easy indexing
 
-    i = -1  # Initialize i to ensure it is defined
-    for i, column in enumerate(categorical_columns):
-        value_counts = data[column].value_counts()
-        sns.barplot(x=value_counts.index, y=value_counts.values, ax=axes[i])
-        axes[i].set_title(f'Value Counts - {column}')
-        axes[i].set_xlabel('Categories')
-        axes[i].set_ylabel('Count')
-        axes[i].tick_params(axis='x', rotation=45)
+    try:
+        for i, column in enumerate(categorical_columns):
+            value_counts = data[column].value_counts()
+            sns.barplot(x=value_counts.index, y=value_counts.values, ax=axes[i])
+            axes[i].set_title(f'Value Counts - {column}')
+            axes[i].set_xlabel('Categories')
+            axes[i].set_ylabel('Count')
+            axes[i].tick_params(axis='x', rotation=45)
 
-    # Hide any unused axes
-    if i >= 0:  # Ensure the loop has executed at least once
-        for j in range(i + 1, len(axes)):
+        # Hide any unused axes
+        for j in range(len(categorical_columns), len(axes)):
             axes[j].set_visible(False)
 
-    fig.tight_layout()
+        fig.tight_layout()
 
-    if output_dir:
-        try:
+        if output_dir:
             os.makedirs(output_dir, exist_ok=True)
             plot_file = os.path.join(output_dir, "categorical_columns_plots.png")
-            fig.savefig(plot_file)
+            plt.savefig(plot_file)
             print(f"Plots saved to {plot_file}")
-        except OSError as exc:
+        else:
+            plt.show()
+    except Exception as exc:
+        plt.close(fig)
+        if output_dir:
             raise PlotSaveError(f"Error saving the plots: {exc}") from exc
-    else:
-        plt.show()
+        else:
+            raise PlotSaveError(f"Error displaying the plots: {exc}") from exc
+    finally:
+        plt.close(fig)
 
 
 def main():
@@ -117,11 +121,22 @@ def main():
 
     args = parser.parse_args()
 
-    # Load the data from the CSV file
-    data = pd.read_csv(args.input_file)
+    try:
+        # Load the data from the CSV file
+        data = pd.read_csv(args.input_file)
 
-    # Plot the categorical columns
-    plot_categorical_columns(data, args.output_dir)
+        # Plot the categorical columns
+        plot_categorical_columns(data, args.output_dir)
+    except FileNotFoundError:
+        print(f"Error: The file '{args.input_file}' was not found.")
+    except pd.errors.EmptyDataError:
+        print(f"Error: The file '{args.input_file}' is empty.")
+    except ValueError as ve:
+        print(f"Error: {ve}")
+    except PlotSaveError as pse:
+        print(f"Error: {pse}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
 
 if __name__ == "__main__":
