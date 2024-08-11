@@ -11,7 +11,7 @@ Thank you for your interest in contributing! This document provides guidelines a
 - [Code Formatting](#code-formatting)
 - [Merge Request Process](#merge-request-process)
 - [License](#license)
-- [Questions or Additional Help](#Questions-or-Additional-Help)
+- [Questions or Additional Help](#questions-or-additional-help)
 
 ## Code of Conduct
 
