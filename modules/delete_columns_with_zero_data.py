@@ -10,9 +10,7 @@ Functions:
 """
 
 import argparse
-from typing import Union
 import pandas as pd
-import numpy as np
 
 
 def delete_columns_with_zero_data(data: pd.DataFrame, threshold: int) -> pd.DataFrame:
@@ -40,7 +38,7 @@ def delete_columns_with_zero_data(data: pd.DataFrame, threshold: int) -> pd.Data
     """
     if not isinstance(data, pd.DataFrame):
         raise TypeError("Input data must be a pandas DataFrame.")
-    
+
     if not isinstance(threshold, int):
         raise TypeError("Threshold must be an integer.")
 
@@ -109,9 +107,6 @@ def main() -> None:
     except pd.errors.EmptyDataError:
         print(f"Error: The file '{args.file}' is empty.")
         return
-    except Exception as e:
-        print(f"Error reading the file: {str(e)}")
-        return
 
     try:
         # Apply the column deletion based on zero values
@@ -122,8 +117,6 @@ def main() -> None:
         print(f"Filtered data saved to {args.output}")
     except (TypeError, ValueError) as e:
         print(f"Error: {str(e)}")
-    except Exception as e:
-        print(f"An unexpected error occurred: {str(e)}")
 
 
 if __name__ == "__main__":

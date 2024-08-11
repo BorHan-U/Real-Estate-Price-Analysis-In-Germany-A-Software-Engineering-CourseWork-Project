@@ -11,7 +11,6 @@ Functions:
 
 import argparse
 import pandas as pd
-import numpy as np
 
 
 def count_null_data(data):
@@ -40,7 +39,8 @@ def count_null_data(data):
     no_missing_data = True
 
     for column in data.columns:
-        if pd.api.types.is_numeric_dtype(data[column]) and not pd.api.types.is_bool_dtype(data[column]):
+        if (pd.api.types.is_numeric_dtype(data[column]) and
+        not pd.api.types.is_bool_dtype(data[column])):
             zero_count = (data[column] == 0).sum()
             nan_count = data[column].isna().sum()
             total_count = zero_count + nan_count
@@ -92,9 +92,6 @@ def main():
         return
     except pd.errors.EmptyDataError:
         print(f"Error: The file '{args.file}' is empty.")
-        return
-    except Exception as e:
-        print(f"Error reading the file: {str(e)}")
         return
 
     # Call the count_null_data function

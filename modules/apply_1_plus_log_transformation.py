@@ -97,7 +97,7 @@ def main():
         print(f"Transformed data saved to {args.output}")
     except Exception as e:
         print(f"An error occurred: {str(e)}")
-        raise SystemExit(1)
+        raise SystemExit(1) from e
 
 
 if __name__ == "__main__":
