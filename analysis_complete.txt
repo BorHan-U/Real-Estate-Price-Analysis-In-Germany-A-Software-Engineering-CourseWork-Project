@@ -1,1 +1,0 @@
-Analysis complete. Boxplot generated for OverallQual vs SalePrice.
