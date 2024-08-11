@@ -7,26 +7,26 @@ edge cases and error handling.
 """
 
 import unittest
-import pandas as pd
-import numpy as np
-import sys
 import os
 import tempfile
 import shutil
 from unittest.mock import patch
+import pandas as pd
+import numpy as np
+import matplotlib
+from modules.plot_boxplot import plot_boxplot, PlotSaveError
+
 
 # Set the matplotlib backend to 'Agg' for non-interactive plotting
-import matplotlib
 matplotlib.use('Agg')
-
-from modules.plot_boxplot import plot_boxplot, PlotSaveError
 
 
 class TestPlotBoxplot(unittest.TestCase):
     """
     Test case for the plot_boxplot function.
 
-    This class contains various test methods to ensure the correct functionality
+    This class contains various test methods
+    to ensure the correct functionality
     of the plot_boxplot function under different scenarios, including
     normal operations, edge cases, and error handling.
     """
@@ -47,7 +47,8 @@ class TestPlotBoxplot(unittest.TestCase):
     def test_plot_normal(self):
         """Test plotting of a boxplot with normal input."""
         plot_boxplot(self.data, 'Category', 'Value', self.temp_dir)
-        expected_file = os.path.join(self.temp_dir, 'Boxplot_of_Value_by_Category.png')
+        expected_file = os.path.join(self.temp_dir,
+                                     'Boxplot_of_Value_by_Category.png')
         self.assertTrue(os.path.exists(expected_file))
 
     def test_empty_dataframe(self):
@@ -80,7 +81,8 @@ class TestPlotBoxplot(unittest.TestCase):
             'Value': range(1, 6)
         })
         plot_boxplot(single_category_data, 'Category', 'Value', self.temp_dir)
-        expected_file = os.path.join(self.temp_dir, 'Boxplot_of_Value_by_Category.png')
+        expected_file = os.path.join(self.temp_dir,
+                                     'Boxplot_of_Value_by_Category.png')
         self.assertTrue(os.path.exists(expected_file))
 
     def test_many_categories(self):
@@ -90,7 +92,8 @@ class TestPlotBoxplot(unittest.TestCase):
             'Value': np.random.rand(50)
         })
         plot_boxplot(many_categories_data, 'Category', 'Value', self.temp_dir)
-        expected_file = os.path.join(self.temp_dir, 'Boxplot_of_Value_by_Category.png')
+        expected_file = os.path.join(self.temp_dir,
+                                     'Boxplot_of_Value_by_Category.png')
         self.assertTrue(os.path.exists(expected_file))
 
     def test_non_string_category(self):
@@ -99,15 +102,18 @@ class TestPlotBoxplot(unittest.TestCase):
             'Category': [1, 2, 3, 1, 2, 3],
             'Value': range(1, 7)
         })
-        plot_boxplot(non_string_category_data, 'Category', 'Value', self.temp_dir)
-        expected_file = os.path.join(self.temp_dir, 'Boxplot_of_Value_by_Category.png')
+        plot_boxplot(non_string_category_data, 'Category',
+                     'Value', self.temp_dir)
+        expected_file = os.path.join(self.temp_dir,
+                                     'Boxplot_of_Value_by_Category.png')
         self.assertTrue(os.path.exists(expected_file))
 
     def test_output_dir_creation(self):
         """Test creation of output directory if it doesn't exist."""
         new_dir = os.path.join(self.temp_dir, 'new_subdir')
         plot_boxplot(self.data, 'Category', 'Value', new_dir)
-        expected_file = os.path.join(new_dir, 'Boxplot_of_Value_by_Category.png')
+        expected_file = os.path.join(new_dir,
+                                     'Boxplot_of_Value_by_Category.png')
         self.assertTrue(os.path.exists(expected_file))
 
 

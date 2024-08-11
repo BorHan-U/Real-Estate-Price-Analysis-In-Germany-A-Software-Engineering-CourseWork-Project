@@ -9,21 +9,26 @@ including edge cases and unexpected inputs.
 import unittest
 import pandas as pd
 import numpy as np
-from modules.drop_columns_with_zero_threshold import drop_columns_with_zero_threshold
+from modules.drop_columns_with_zero_threshold import (
+    drop_columns_with_zero_threshold
+)
 
 
 class TestDropColumnsWithZeroThreshold(unittest.TestCase):
     """
     Test case for the drop_columns_with_zero_threshold function.
 
-    This class contains various test methods to ensure the correct functionality
-    of the drop_columns_with_zero_threshold function under different scenarios,
+    This class contains various test methods
+    to ensure the correct functionality
+    of the drop_columns_with_zero_threshold
+    function under different scenarios,
     including normal operations, edge cases, and error handling.
     """
 
     def test_drop_columns_normal(self):
         """
-        Test dropping of columns with zero data above a threshold in a normal scenario.
+        Test dropping of columns with zero data above
+        a threshold in a normal scenario.
         """
         data = pd.DataFrame({
             'A': [0, 0, 0],

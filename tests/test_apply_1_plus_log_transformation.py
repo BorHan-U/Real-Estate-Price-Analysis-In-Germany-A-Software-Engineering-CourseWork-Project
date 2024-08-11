@@ -1,23 +1,26 @@
 """
-This module contains unit tests for the apply_1_plus_log_transformation function.
+This module contains unit tests for the
+apply_1_plus_log_transformation function.
 
-The tests cover basic functionality, edge cases, error handling, and input validation
+The tests cover basic functionality, edge cases,
+error handling, and input validation
 for the log(1+x) transformation function.
 """
 
 import unittest
-import sys
-from pathlib import Path
 import pandas as pd
 import numpy as np
-from modules.apply_1_plus_log_transformation import apply_1_plus_log_transformation
+from modules.apply_1_plus_log_transformation import (
+    apply_1_plus_log_transformation as apply_log
+)
 
 
 class TestApply1PlusLogTransformation(unittest.TestCase):
     """
     Test case for the apply_1_plus_log_transformation function.
 
-    This class contains various test methods to ensure the correct functionality
+    This class contains various test methods to
+    ensure the correct functionality
     of the apply_1_plus_log_transformation function under different scenarios.
     """
 
@@ -33,7 +36,7 @@ class TestApply1PlusLogTransformation(unittest.TestCase):
             'B': [4, 5, 6]
         })
         columns_to_transform = ['A', 'B']
-        transformed_data = apply_1_plus_log_transformation(data, columns_to_transform)
+        transformed_data = apply_log(data, columns_to_transform)
         expected_data = pd.DataFrame({
             'A': np.log1p([1, 2, 3]),
             'B': np.log1p([4, 5, 6])
@@ -44,12 +47,13 @@ class TestApply1PlusLogTransformation(unittest.TestCase):
         """
         Test the function with an empty DataFrame.
 
-        This test checks if the function correctly handles an empty DataFrame input
+        This test checks if the function correctly
+        handles an empty DataFrame input
         by returning an empty DataFrame.
         """
         data = pd.DataFrame()
         columns_to_transform = ['A', 'B']
-        transformed_data = apply_1_plus_log_transformation(data, columns_to_transform)
+        transformed_data = apply_log(data, columns_to_transform)
         self.assertTrue(transformed_data.empty)
 
     def test_missing_columns(self):
@@ -65,11 +69,12 @@ class TestApply1PlusLogTransformation(unittest.TestCase):
         })
         columns_to_transform = ['A', 'C']
         with self.assertRaises(ValueError):
-            apply_1_plus_log_transformation(data, columns_to_transform)
+            apply_log(data, columns_to_transform)
 
     def test_non_numeric_data(self):
         """
-        Test the function when non-numeric data is present in columns to transform.
+        Test the function when non-numeric data is
+        present in columns to transform.
 
         This test checks if the function raises a ValueError when encountering
         non-numeric data in a column that is to be transformed.
@@ -80,7 +85,7 @@ class TestApply1PlusLogTransformation(unittest.TestCase):
         })
         columns_to_transform = ['A', 'B']
         with self.assertRaises(ValueError):
-            apply_1_plus_log_transformation(data, columns_to_transform)
+            apply_log(data, columns_to_transform)
 
     def test_invalid_input_type(self):
         """
@@ -92,7 +97,7 @@ class TestApply1PlusLogTransformation(unittest.TestCase):
         data = [1, 2, 3]
         columns_to_transform = ['A', 'B']
         with self.assertRaises(TypeError):
-            apply_1_plus_log_transformation(data, columns_to_transform)
+            apply_log(data, columns_to_transform)
 
 
 if __name__ == '__main__':

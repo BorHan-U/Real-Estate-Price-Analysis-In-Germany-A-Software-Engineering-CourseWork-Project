@@ -1,107 +1,144 @@
 """
-Unit tests for model_evaluation module.
+Unit tests for hyperparameter_tuning module.
 
 This module contains comprehensive tests to ensure the correct functionality
-of the model_evaluation function under various scenarios, including
-edge cases and error handling.
+of the hyperparameter_tuning function under various scenarios, including
+edge cases and unexpected inputs.
 """
-
 import unittest
-import numpy as np
 import pandas as pd
-from sklearn.linear_model import LinearRegression
 from sklearn.datasets import make_regression
-import sys
-import os
-import tempfile
-
-from modules.model_evaluation import model_evaluation, ModelEvaluationError
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LinearRegression
+from modules.hyperparameter_tuning import hyperparameter_tuning
 
 
-class TestModelEvaluation(unittest.TestCase):
+class TestHyperparameterTuning(unittest.TestCase):
     """
-    Test case for the model_evaluation function.
+    Test case for the hyperparameter_tuning function.
 
-    This class contains various test methods to ensure the correct functionality
-    of the model_evaluation function under different scenarios, including
+    This class contains various test methods
+    to ensure the correct functionality
+    of the hyperparameter_tuning function under
+    different scenarios, including
     normal operations, edge cases, and error handling.
     """
 
     def setUp(self):
-        """Set up test data and model."""
-        self.X, self.y = make_regression(n_samples=100, n_features=20, noise=0.1, random_state=42)
-        self.model = LinearRegression().fit(self.X, self.y)
+        """
+        Set up test data and models.
+        """
+        self.x, self.y = make_regression(
+            n_samples=100, n_features=20, noise=0.1, random_state=42)[:2]
+        self.x = pd.DataFrame(self.x)
+        self.y = pd.Series(self.y)
 
-    def test_evaluation_normal(self):
-        """Test model evaluation for a LinearRegression model with normal input."""
-        with tempfile.NamedTemporaryFile(mode='w', delete=False) as temp_file:
-            metrics = model_evaluation('LinearRegression', self.model, self.X, self.y, temp_file.name)
-        
-        self.assertIn('MSE', metrics)
-        self.assertIn('R2-Score', metrics)
-        self.assertGreater(metrics['R2-Score'], 0)  # R2 should be positive for this regression
-        
-        # Check if the output file was created and contains the correct data
-        with open(temp_file.name, 'r') as f:
-            lines = f.readlines()
-        self.assertEqual(lines[0].strip(), "Predicted,Actual")
-        self.assertEqual(len(lines), 101)  # Header + 100 data points
-        
-        os.unlink(temp_file.name)  # Clean up the temporary file
+    def test_tuning_single_model(self):
+        """
+        Test hyperparameter tuning for a single RandomForest model.
+        """
+        models = [('RandomForest', RandomForestRegressor(random_state=42))]
+        param_grids = [{'n_estimators': [10, 50], 'max_depth': [None, 10]}]
+        best_models, best_params = hyperparameter_tuning(models,
+                                                         param_grids,
+                                                         self.x,
+                                                         self.y)
+        self.assertIn('RandomForest', best_models)
+        self.assertIn('RandomForest', best_params)
+        self.assertIsInstance(best_models['RandomForest'],
+                              RandomForestRegressor)
+        self.assertIsInstance(best_params['RandomForest'], dict)
 
-    def test_empty_input(self):
-        """Test handling of empty input data."""
+    def test_tuning_multiple_models(self):
+        """
+        Test hyperparameter tuning for multiple models.
+        """
+        models = [
+            ('RandomForest', RandomForestRegressor(random_state=42)),
+            ('LinearRegression', LinearRegression())
+        ]
+        param_grids = [
+            {'n_estimators': [10, 50], 'max_depth': [None, 10]},
+            {'fit_intercept': [True, False]}
+        ]
+        best_models, best_params = hyperparameter_tuning(
+            models, param_grids, self.x, self.y)
+        self.assertEqual(len(best_models), 2)
+        self.assertEqual(len(best_params), 2)
+        self.assertIn('RandomForest', best_models)
+        self.assertIn('LinearRegression', best_models)
+
+    def test_empty_models_and_param_grids(self):
+        """
+        Test handling of empty models and param_grids lists.
+        """
         with self.assertRaises(ValueError):
-            model_evaluation('LinearRegression', self.model, np.array([]), np.array([]), 'output.csv')
+            hyperparameter_tuning([], [], self.x, self.y)
 
-    def test_mismatched_samples(self):
-        """Test handling of mismatched number of samples in X and y."""
+    def test_mismatched_models_and_param_grids(self):
+        """
+        Test handling of mismatched lengths of models and param_grids lists.
+        """
+        models = [('RandomForest', RandomForestRegressor())]
+        param_grids = [{'n_estimators': [10, 50]}, {'max_depth': [None, 10]}]
         with self.assertRaises(ValueError):
-            model_evaluation('LinearRegression', self.model, self.X, self.y[:-1], 'output.csv')
+            hyperparameter_tuning(models, param_grids, self.x, self.y)
 
     def test_invalid_model(self):
-        """Test handling of an invalid model."""
-        invalid_model = "Not a model"
-        with self.assertRaises(ModelEvaluationError):
-            model_evaluation('InvalidModel', invalid_model, self.X, self.y, 'output.csv')
+        """
+        Test handling of an invalid model that doesn't
+        implement the scikit-learn estimator interface.
+        """
+        class InvalidModel:
+            """
+            A mock model class for testing purposes.
+            """
+            def fit(self, x, y):
+                """
+                A mock fit method
+                """
 
-    def test_non_writable_output(self):
-        """Test handling of a non-writable output file."""
-        with self.assertRaises(ModelEvaluationError):
-            model_evaluation('LinearRegression', self.model, self.X, self.y, '/nonexistent/path/output.csv')
+            def predict(self, x):
+                """
+                A mock predict method.
+                """
+                return [0] * len(x)
 
-    def test_pandas_input(self):
-        """Test handling of pandas DataFrame and Series as input."""
-        X_df = pd.DataFrame(self.X)
-        y_series = pd.Series(self.y)
-        with tempfile.NamedTemporaryFile(mode='w', delete=False) as temp_file:
-            metrics = model_evaluation('LinearRegression', self.model, X_df, y_series, temp_file.name)
-        
-        self.assertIn('MSE', metrics)
-        self.assertIn('R2-Score', metrics)
-        
-        os.unlink(temp_file.name)  # Clean up the temporary file
+        models = [('InvalidModel', InvalidModel())]
+        param_grids = [{}]
+        best_models, best_params = hyperparameter_tuning(models,
+                                                         param_grids,
+                                                         self.x, self.y)
+        self.assertIsNone(best_models['InvalidModel'])
+        self.assertIsNone(best_params['InvalidModel'])
 
-    def test_different_model(self):
-        """Test evaluation with a different model (e.g., a dummy model that always predicts the mean)."""
-        class DummyModel:
-            def predict(self, X):
-                return np.full(X.shape[0], np.mean(self.y))
-            
-            def fit(self, X, y):
-                self.y = y
-                return self
+    def test_empty_param_grid(self):
+        """
+        Test handling of an empty parameter grid.
+        """
+        models = [('LinearRegression', LinearRegression())]
+        param_grids = [{}]
+        best_models, best_params = hyperparameter_tuning(models,
+                                                         param_grids,
+                                                         self.x,
+                                                         self.y)
+        self.assertIn('LinearRegression', best_models)
+        self.assertIn('LinearRegression', best_params)
+        self.assertEqual(best_params['LinearRegression'], {})
 
-        dummy_model = DummyModel().fit(self.X, self.y)
-        
-        with tempfile.NamedTemporaryFile(mode='w', delete=False) as temp_file:
-            metrics = model_evaluation('DummyModel', dummy_model, self.X, self.y, temp_file.name)
-        
-        self.assertIn('MSE', metrics)
-        self.assertIn('R2-Score', metrics)
-        self.assertAlmostEqual(metrics['R2-Score'], 0, places=5)  # R2 should be close to 0 for this dummy model
-        
-        os.unlink(temp_file.name)  # Clean up the temporary file
+    def test_non_dataframe_input(self):
+        """
+        Test handling of non-DataFrame input.
+        """
+        x = self.x.values
+        y = self.y.values
+        models = [('RandomForest', RandomForestRegressor(random_state=42))]
+        param_grids = [{'n_estimators': [10, 50]}]
+        best_models, best_params = hyperparameter_tuning(models,
+                                                         param_grids,
+                                                         x, y)
+        self.assertIn('RandomForest', best_models)
+        self.assertIn('RandomForest', best_params)
 
 
 if __name__ == '__main__':
