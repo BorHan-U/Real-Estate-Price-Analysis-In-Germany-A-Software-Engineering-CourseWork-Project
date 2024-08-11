@@ -7,26 +7,26 @@ edge cases and error handling.
 """
 
 import unittest
-import pandas as pd
-import sys
 import os
 import tempfile
 import shutil
 from unittest.mock import patch
-import matplotlib.pyplot as plt
+import pandas as pd
+import matplotlib
+from modules.plot_categorical_columns import plot_categorical_columns
 
 # Set the matplotlib backend to 'Agg' for non-interactive plotting
-import matplotlib
 matplotlib.use('Agg')
-from modules.plot_categorical_columns import plot_categorical_columns, PlotSaveError
 
 
 class TestPlotCategoricalColumns(unittest.TestCase):
     """
     Test case for the plot_categorical_columns function.
 
-    This class contains various test methods to ensure the correct functionality
-    of the plot_categorical_columns function under different scenarios, including
+    This class contains various test methods
+    to ensure the correct functionality
+    of the plot_categorical_columns
+    function under different scenarios, including
     normal operations, edge cases, and error handling.
     """
 
@@ -40,25 +40,22 @@ class TestPlotCategoricalColumns(unittest.TestCase):
         })
         self.temp_dir = tempfile.mkdtemp()
 
-
     def tearDown(self):
         """Clean up temporary directory."""
         shutil.rmtree(self.temp_dir)
 
-
     def test_plot_normal(self):
         """Test plotting of categorical columns with normal input."""
         plot_categorical_columns(self.data, self.temp_dir)
-        expected_file = os.path.join(self.temp_dir, "categorical_columns_plots.png")
+        expected_file = os.path.join(self.temp_dir,
+                                     "categorical_columns_plots.png")
         self.assertTrue(os.path.exists(expected_file))
-
 
     def test_empty_dataframe(self):
         """Test handling of an empty DataFrame."""
         empty_df = pd.DataFrame()
         with self.assertRaises(ValueError):
             plot_categorical_columns(empty_df, self.temp_dir)
-
 
     def test_no_categorical_columns(self):
         """Test handling of a DataFrame with no categorical columns."""
@@ -69,7 +66,6 @@ class TestPlotCategoricalColumns(unittest.TestCase):
         with self.assertRaises(ValueError):
             plot_categorical_columns(numeric_df, self.temp_dir)
 
-
     def test_too_many_categories(self):
         """Test handling of columns with too many unique values."""
         many_categories_df = pd.DataFrame({
@@ -78,13 +74,11 @@ class TestPlotCategoricalColumns(unittest.TestCase):
         with self.assertRaises(ValueError):
             plot_categorical_columns(many_categories_df, self.temp_dir)
 
-
     def test_no_output_dir(self):
         """Test plotting without specifying an output directory."""
         with patch('matplotlib.pyplot.show') as mock_show:
             plot_categorical_columns(self.data)
             mock_show.assert_called_once()
-
 
     def test_mixed_data_types(self):
         """Test handling of mixed data types."""
@@ -94,9 +88,9 @@ class TestPlotCategoricalColumns(unittest.TestCase):
             'Boolean': [True, False, True]
         })
         plot_categorical_columns(mixed_df, self.temp_dir)
-        expected_file = os.path.join(self.temp_dir, "categorical_columns_plots.png")
+        expected_file = os.path.join(self.temp_dir,
+                                     "categorical_columns_plots.png")
         self.assertTrue(os.path.exists(expected_file))
-
 
     def test_output_dir_creation(self):
         """Test creation of output directory if it doesn't exist."""
