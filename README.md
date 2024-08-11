@@ -44,6 +44,17 @@ Ensure you have the following prerequisites installed on your system:
 - [Snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html): For workflow management.
 - [VSCode](https://code.visualstudio.com/download): For IDE, can be chosen on preference.
 
+First create python virtual environment using the following command:
+
+```sh
+python -m venv <myenv>
+```
+Then activate the environment using the following command:
+
+```sh
+<myenv>/Scripts/activate
+```
+
 ## Package Requirement
 The script requires the following Python packages:
 
@@ -59,7 +70,8 @@ The script requires the following Python packages:
 - xgboost
 - snakemake
 
-Can be installed these packages by running the following command.
+
+Can be installed these packages by running the following command:
 
 ```sh
 pip install -r requirements.txt
