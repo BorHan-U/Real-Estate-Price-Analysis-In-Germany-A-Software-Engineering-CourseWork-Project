@@ -6,13 +6,11 @@ DataFrames with all NaN values, non-DataFrame inputs, and mixed data types.
 """
 
 import unittest
-import sys
-import os
 import io
 from contextlib import redirect_stdout
 import pandas as pd
 import numpy as np
-from modules.count_null_data import count_null_data  # pylint: disable=wrong-import-position
+from modules.count_null_data import count_null_data
 
 
 class TestCountNullData(unittest.TestCase):
@@ -71,7 +69,8 @@ class TestCountNullData(unittest.TestCase):
         """
         Test counting of null data in an empty DataFrame.
 
-        This test verifies that the function handles empty DataFrames correctly.
+        This test verifies that the function
+        handles empty DataFrames correctly.
         """
         data_empty = pd.DataFrame()
         result = count_null_data(data_empty)
@@ -84,7 +83,8 @@ class TestCountNullData(unittest.TestCase):
         This test checks if the function correctly counts NaN values when
         all values in the DataFrame are NaN.
         """
-        data_all_nan = pd.DataFrame({'A': [np.nan, np.nan], 'B': [np.nan, np.nan]})
+        data_all_nan = pd.DataFrame({'A': [np.nan, np.nan],
+                                     'B': [np.nan, np.nan]})
         result = count_null_data(data_all_nan)
         self.assertEqual(result['A']['total'], 2)
         self.assertEqual(result['B']['total'], 2)
