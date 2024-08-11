@@ -5,20 +5,11 @@ This module contains comprehensive tests to ensure the correct functionality
 of the hyperparameter_tuning function under various scenarios, including
 edge cases and unexpected inputs.
 """
-
 import unittest
 import pandas as pd
-import numpy as np
 from sklearn.datasets import make_regression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
-from sklearn.exceptions import NotFittedError
-import sys
-import os
-
-# Add the parent directory of 'modules' to the Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from modules.hyperparameter_tuning import hyperparameter_tuning
 
 

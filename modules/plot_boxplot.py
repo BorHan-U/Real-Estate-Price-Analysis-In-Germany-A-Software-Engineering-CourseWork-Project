@@ -3,14 +3,13 @@ This module provides functionality to plot a boxplot of specified columns
 in a DataFrame and save the plot to a file.
 
 Functions:
-- plot_boxplot: Plot a boxplot of the specified columns in a DataFrame and save the plot to a file.
+- plot_boxplot: Plot a boxplot of the specified columns
+in a DataFrame and save the plot to a file.
 - main: Parses command-line arguments and plots the boxplot.
 """
 
 import argparse
 import os
-from typing import Any
-
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
@@ -20,9 +19,11 @@ class PlotSaveError(Exception):
     """Custom exception for errors during plot saving."""
 
 
-def plot_boxplot(df: pd.DataFrame, x_column: str, y_column: str, output_dir: str) -> None:
+def plot_boxplot(df: pd.DataFrame, x_column: str,
+                 y_column: str, output_dir: str) -> None:
     """
-    Plot a boxplot of the specified columns in a DataFrame and save the plot to a file.
+    Plot a boxplot of the specified columns in
+    a DataFrame and save the plot to a file.
 
     Parameters
     ----------
@@ -38,7 +39,8 @@ def plot_boxplot(df: pd.DataFrame, x_column: str, y_column: str, output_dir: str
     Raises
     ------
     ValueError
-        If the DataFrame is empty, the specified columns do not exist, or the y_column is not numeric.
+        If the DataFrame is empty, the specified
+                columns do not exist, or the y_column is not numeric.
     PlotSaveError
         For any error that occurs during file writing.
     """
@@ -47,12 +49,14 @@ def plot_boxplot(df: pd.DataFrame, x_column: str, y_column: str, output_dir: str
 
     if x_column not in df.columns or y_column not in df.columns:
         raise ValueError(
-            f"Columns '{x_column}' or '{y_column}' do not exist in the DataFrame."
+            f"Columns '{x_column}' or '{y_column}'"
+            f"do not exist in the DataFrame."
         )
 
     if not pd.api.types.is_numeric_dtype(df[y_column]):
         raise ValueError(
-            f"The y_column '{y_column}' must be numeric to plot a boxplot."
+            f"The y_column '{y_column}'"
+            f"must be numeric to plot a boxplot."
         )
 
     data = df[[x_column, y_column]]
@@ -94,7 +98,8 @@ def main() -> None:
     """
     parser = argparse.ArgumentParser(
         description=(
-            "Plot a boxplot of specified columns in a DataFrame and save it to a file."
+            "Plot a boxplot of specified columns in"
+            "a DataFrame and save it to a file."
         )
     )
     parser.add_argument(
@@ -124,16 +129,11 @@ def main() -> None:
     except pd.errors.EmptyDataError:
         print(f"Error: The file '{args.input_file}' is empty.")
         return
-    except Exception as e:
-        print(f"Error reading the file: {str(e)}")
-        return
 
     try:
         plot_boxplot(df, args.x_column, args.y_column, args.output_dir)
     except (ValueError, PlotSaveError) as e:
         print(f"Error: {str(e)}")
-    except Exception as e:
-        print(f"An unexpected error occurred: {str(e)}")
 
 
 if __name__ == "__main__":

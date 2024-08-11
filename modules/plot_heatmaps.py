@@ -3,14 +3,13 @@ This module provides functionality to plot correlation matrix heatmaps
 from a DataFrame and save them to a file.
 
 Functions:
-- plot_heatmaps: Plot correlation matrix heatmaps from a DataFrame and save them to a file.
+- plot_heatmaps: Plot correlation matrix heatmaps
+from a DataFrame and save them to a file.
 - main: Parses command-line arguments and plots the heatmaps.
 """
 
 import argparse
 import os
-from typing import Optional
-
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -124,8 +123,6 @@ def main() -> None:
         print(f"Error: {ve}")
     except PlotSaveError as pse:
         print(f"Error: {pse}")
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
 
 
 if __name__ == "__main__":

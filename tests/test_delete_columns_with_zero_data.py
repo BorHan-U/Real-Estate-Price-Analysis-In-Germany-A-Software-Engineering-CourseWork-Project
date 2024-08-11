@@ -17,9 +17,6 @@ from typing import Any
 import pandas as pd
 import numpy as np
 
-# Add the parent directory of 'modules' to the Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from modules.delete_columns_with_zero_data import delete_columns_with_zero_data  # pylint: disable=wrong-import-position
 
 

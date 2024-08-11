@@ -16,7 +16,8 @@ import pandas as pd
 
 def separate_categorical_numerical(data):
     """
-    Separates the columns of a DataFrame into categorical and numerical columns.
+    Separates the columns of a DataFrame into
+    categorical and numerical columns.
 
     Parameters
     ----------
@@ -26,7 +27,8 @@ def separate_categorical_numerical(data):
     Returns
     -------
     tuple
-        A tuple containing two lists - categorical columns and numerical columns.
+        A tuple containing two lists - categorical
+        columns and numerical columns.
 
     Raises
     ------
@@ -45,12 +47,13 @@ def separate_categorical_numerical(data):
     for column in data.columns:
         dtype = data[column].dtype
 
-        if (isinstance(dtype, pd.CategoricalDtype) or 
-            pd.api.types.is_object_dtype(dtype) or 
-            pd.api.types.is_bool_dtype(dtype) or
-            pd.api.types.is_datetime64_any_dtype(dtype)):
+        if (isinstance(dtype, pd.CategoricalDtype) or
+                pd.api.types.is_object_dtype(dtype) or
+                pd.api.types.is_bool_dtype(dtype) or
+                pd.api.types.is_datetime64_any_dtype(dtype)):
             categorical_cols.append(column)
-        elif pd.api.types.is_numeric_dtype(dtype) and not pd.api.types.is_complex_dtype(dtype):
+        elif (pd.api.types.is_numeric_dtype(dtype) and
+              not pd.api.types.is_complex_dtype(dtype)):
             numerical_cols.append(column)
         else:
             print(
@@ -58,7 +61,7 @@ def separate_categorical_numerical(data):
                 "It will be ignored."
             )
 
-    return categorical_cols, numerical_cols
+    return numerical_cols
 
 
 def main():
@@ -99,21 +102,15 @@ def main():
         data = pd.read_csv(args.input_file)
 
         # Separate the columns into categorical and numerical
-        categorical_cols, numerical_cols = separate_categorical_numerical(data)
+        numerical_cols = separate_categorical_numerical(data)
 
         # Save the results to files if specified
-        if args.output_categorical:
-            with open(args.output_categorical, 'w', encoding='utf-8') as file:
-                json.dump(categorical_cols, file)
-            print(f"Categorical columns saved to {args.output_categorical}")
-
         if args.output_numerical:
             with open(args.output_numerical, 'w', encoding='utf-8') as file:
                 json.dump(numerical_cols, file)
             print(f"Numerical columns saved to {args.output_numerical}")
 
         # Print the results
-        print("Categorical Columns:", categorical_cols)
         print("Numerical Columns:", numerical_cols)
 
     except FileNotFoundError:
@@ -122,8 +119,6 @@ def main():
         print(f"Error: The file '{args.input_file}' is empty.")
     except ValueError as ve:
         print(f"Error: {ve}")
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
 
 
 if __name__ == "__main__":

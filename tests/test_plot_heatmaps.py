@@ -18,9 +18,6 @@ import shutil
 import matplotlib
 matplotlib.use('Agg')
 
-# Add the parent directory of 'modules' to the Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from modules.plot_heatmaps import plot_heatmaps, PlotSaveError
 
 

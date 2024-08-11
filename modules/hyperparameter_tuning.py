@@ -17,17 +17,19 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.base import BaseEstimator
 
 
-def hyperparameter_tuning(models, param_grids, X_train, y_train):
+def hyperparameter_tuning(models, param_grids, x_train, y_train):
     """
     Perform hyperparameter tuning using GridSearchCV for multiple models.
 
     Parameters
     ----------
     models : list of tuples
-        List of tuples where each tuple contains the model name (str) and the model instance.
+        List of tuples where each tuple contains
+        the model name (str) and the model instance.
     param_grids : list of dict
-        List of dictionaries with parameter names (str) as keys and lists of parameter settings to try as values.
-    X_train : pd.DataFrame or np.ndarray
+        List of dictionaries with parameter names (str) as keys and
+        lists of parameter settings to try as values.
+    x_train : pd.DataFrame or np.ndarray
         Training data features.
     y_train : pd.Series or np.ndarray
         Training data labels.
@@ -35,9 +37,11 @@ def hyperparameter_tuning(models, param_grids, X_train, y_train):
     Returns
     -------
     best_models : dict
-        Dictionary with model names as keys and the best found models as values.
+        Dictionary with model names as keys
+        and the best found models as values.
     best_params : dict
-        Dictionary with model names as keys and the best found parameters as values.
+        Dictionary with model names as keys
+        and the best found parameters as values.
 
     Raises
     ------
@@ -45,10 +49,12 @@ def hyperparameter_tuning(models, param_grids, X_train, y_train):
         If models and param_grids are empty or of different lengths.
     """
     if not models or not param_grids:
-        raise ValueError("The 'models' and 'param_grids' lists must not be empty.")
+        raise ValueError("The 'models' and 'param_grids'"
+                         "lists must not be empty.")
 
     if len(models) != len(param_grids):
-        raise ValueError("The 'models' and 'param_grids' lists must have the same length.")
+        raise ValueError("The 'models' and 'param_grids'"
+                         "lists must have the same length.")
 
     best_models = {}
     best_params = {}
@@ -58,13 +64,14 @@ def hyperparameter_tuning(models, param_grids, X_train, y_train):
 
         try:
             if not isinstance(model, BaseEstimator):
-                raise ValueError(f"Model '{name}' is not a valid scikit-learn estimator.")
+                raise ValueError(f"Model '{name}' is not"
+                                 "a valid scikit-learn estimator.")
 
             grid_search = GridSearchCV(
                 estimator=model, param_grid=param_grid, cv=3,
                 scoring='neg_mean_squared_error', n_jobs=-1, verbose=2
             )
-            grid_search.fit(X_train, y_train)
+            grid_search.fit(x_train, y_train)
 
             best_models[name] = grid_search.best_estimator_
             best_params[name] = grid_search.best_params_
@@ -91,20 +98,33 @@ def main():
         If the command-line arguments are invalid.
     """
     parser = argparse.ArgumentParser(
-        description="Perform hyperparameter tuning using GridSearchCV for multiple models."
+        description="Perform hyperparameter tuning using"
+        "GridSearchCV for multiple models."
     )
-    parser.add_argument("X_train_file", type=str, help="Path to the CSV file containing the training features.")
-    parser.add_argument("y_train_file", type=str, help="Path to the CSV file containing the training labels.")
-    parser.add_argument("models_file", type=str, help="Path to the joblib file containing the models to be tuned.")
-    parser.add_argument("param_grids_file", type=str, help="Path to the joblib file containing the parameter grids.")
-    parser.add_argument("--output_models", type=str, default="best_models.joblib", help="Path to save the best models.")
-    parser.add_argument("--output_params", type=str, default="best_params.joblib", help="Path to save the best parameters.")
+    parser.add_argument("x_train_file", type=str,
+                        help="Path to the CSV file"
+                        "containing the training features.")
+    parser.add_argument("y_train_file", type=str,
+                        help="Path to the CSV file"
+                        "containing the training labels.")
+    parser.add_argument("models_file", type=str,
+                        help="Path to the joblib file"
+                        "containing the models to be tuned.")
+    parser.add_argument("param_grids_file", type=str,
+                        help="Path to the joblib file"
+                        "containing the parameter grids.")
+    parser.add_argument("--output_models", type=str,
+                        default="best_models.joblib",
+                        help="Path to save the best models.")
+    parser.add_argument("--output_params", type=str,
+                        default="best_params.joblib",
+                        help="Path to save the best parameters.")
 
     args = parser.parse_args()
 
     try:
         # Load data
-        X_train = pd.read_csv(args.X_train_file)
+        x_train = pd.read_csv(args.x_train_file)
         y_train = pd.read_csv(args.y_train_file).squeeze()  # Convert to Series
 
         # Load models and parameter grids
@@ -112,7 +132,9 @@ def main():
         param_grids = joblib.load(args.param_grids_file)
 
         # Perform hyperparameter tuning
-        best_models, best_params = hyperparameter_tuning(models, param_grids, X_train, y_train)
+        best_models, best_params = hyperparameter_tuning(
+            models, param_grids, x_train, y_train
+            )
 
         # Save the best models and parameters
         joblib.dump(best_models, args.output_models)

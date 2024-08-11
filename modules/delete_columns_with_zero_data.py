@@ -10,37 +10,40 @@ Functions:
 """
 
 import argparse
-from typing import Union
 import pandas as pd
-import numpy as np
 
 
-def delete_columns_with_zero_data(data: pd.DataFrame, threshold: int) -> pd.DataFrame:
+def delete_columns_with_zero_data(data: pd.DataFrame,
+                                  threshold: int) -> pd.DataFrame:
     """
-    Deletes columns from a DataFrame where the number of zero values exceeds a given threshold.
+    Deletes columns from a DataFrame where the number
+    of zero values exceeds a given threshold.
 
     Parameters
     ----------
     data : pd.DataFrame
         The input data as a pandas DataFrame.
     threshold : int
-        The maximum allowed number of zero values in a column before it is dropped.
+        The maximum allowed number of zero values
+        in a column before it is dropped.
 
     Returns
     -------
     pd.DataFrame
-        The DataFrame with columns removed where zero values exceed the threshold.
+        The DataFrame with columns removed where zero
+        values exceed the threshold.
 
     Raises
     ------
     TypeError
-        If the input data is not a pandas DataFrame or threshold is not an integer.
+        If the input data is not a pandas DataFrame or
+        threshold is not an integer.
     ValueError
         If the DataFrame is empty or the threshold is negative.
     """
     if not isinstance(data, pd.DataFrame):
         raise TypeError("Input data must be a pandas DataFrame.")
-    
+
     if not isinstance(threshold, int):
         raise TypeError("Threshold must be an integer.")
 
@@ -66,7 +69,8 @@ def delete_columns_with_zero_data(data: pd.DataFrame, threshold: int) -> pd.Data
     else:
         print("No columns were dropped.")
 
-    # If all columns were dropped, return an empty DataFrame with the original index
+    # If all columns were dropped, return an empty
+    # DataFrame with the original index
     if len(data.columns) == 0:
         return pd.DataFrame(index=data.index)
 
@@ -86,12 +90,14 @@ def main() -> None:
         If the command-line arguments are invalid.
     """
     parser = argparse.ArgumentParser(
-        description="Delete columns from a DataFrame where zero values exceed a given threshold."
+        description="Delete columns from a DataFrame where"
+        "zero values exceed a given threshold."
     )
     parser.add_argument("file", type=str, help="Path to the input CSV file.")
     parser.add_argument(
         "threshold", type=int,
-        help="Threshold for the maximum allowed number of zero values in a column."
+        help="Threshold for the maximum allowed"
+        "number of zero values in a column."
     )
     parser.add_argument(
         "--output", type=str, default="filtered_data.csv",
@@ -109,9 +115,6 @@ def main() -> None:
     except pd.errors.EmptyDataError:
         print(f"Error: The file '{args.file}' is empty.")
         return
-    except Exception as e:
-        print(f"Error reading the file: {str(e)}")
-        return
 
     try:
         # Apply the column deletion based on zero values
@@ -122,8 +125,6 @@ def main() -> None:
         print(f"Filtered data saved to {args.output}")
     except (TypeError, ValueError) as e:
         print(f"Error: {str(e)}")
-    except Exception as e:
-        print(f"An unexpected error occurred: {str(e)}")
 
 
 if __name__ == "__main__":

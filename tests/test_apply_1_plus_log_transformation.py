@@ -7,14 +7,9 @@ for the log(1+x) transformation function.
 
 import unittest
 import sys
-import os
 from pathlib import Path
 import pandas as pd
 import numpy as np
-
-# Add the parent directory of 'modules' to the Python path
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-
 from modules.apply_1_plus_log_transformation import apply_1_plus_log_transformation
 
 

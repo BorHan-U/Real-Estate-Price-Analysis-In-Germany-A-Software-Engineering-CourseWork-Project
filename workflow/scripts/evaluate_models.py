@@ -1,23 +1,30 @@
-import os
-import sys
-import pandas as pd
 import argparse
 import logging
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
+import os
+import sys
+
+import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
-from lightgbm import LGBMRegressor
-from xgboost import XGBRegressor
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeRegressor
+from xgboost import XGBRegressor
+from lightgbm import LGBMRegressor
 
 # Add the root directory to the Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+sys.path.append(
+    os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            '../..')))
 
 from modules.hyperparameter_tuning import hyperparameter_tuning
 from modules.model_evaluation import model_evaluation
 
+
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 def get_param_grids():
     """Return a dictionary of models and their corresponding hyperparameter grids."""
@@ -46,28 +53,25 @@ def get_param_grids():
         }
     }
 
+
 def evaluate_models(input_file, output_dir):
     """Evaluate models using the provided dataset and save the results."""
-    # Validate input file and output directory
     if not os.path.isfile(input_file):
-        logging.error(f"Input file '{input_file}' does not exist.")
+        logging.error("Input file '%s' does not exist.", input_file)
         return
 
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-        logging.info(f"Created output directory '{output_dir}'.")
+        logging.info("Created output directory '%s'.", output_dir)
 
-    # Load data
     data = pd.read_csv(input_file)
-    logging.info(f"Loaded data from '{input_file}' with shape {data.shape}.")
+    logging.info("Loaded data from '%s' with shape '%s'.", input_file, data.shape)
 
-    # Split data
-    X = data.iloc[:, :-1].values
+    x = data.iloc[:, :-1].values
     y = data.iloc[:, -1].values
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    logging.info(f"Split data into train and test sets with shapes {X_train.shape} and {X_test.shape}.")
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+    logging.info("Split data into train and test sets with shapes '%s' and '%s'.", x_train.shape, x_test.shape)
 
-    # Model definitions
     models = [
         ('MultipleLinearRegression', LinearRegression()),
         ('RandomForest', RandomForestRegressor()),
@@ -76,36 +80,30 @@ def evaluate_models(input_file, output_dir):
         ('XGB', XGBRegressor())
     ]
 
-    # Get parameter grids
     param_grids = get_param_grids()
+    best_models, best_params = hyperparameter_tuning(models, [param_grids[name] for name, _ in models], x_train, y_train)
 
-    # Hyperparameter tuning
-    best_models, best_params = hyperparameter_tuning(models, [param_grids[name] for name, _ in models], X_train, y_train)
-
-    # Log best parameters
     for name, params in best_params.items():
-        logging.info(f"Best parameters for {name}: {params}")
+        logging.info("Best parameters for '%s': '%s'", name, params)
 
-    # Model evaluation
     metrics_list = []
     for name, model in best_models.items():
         output_name = f"yPred_yTrue_table_{name}.txt"
         path = os.path.join(output_dir, output_name)
-        metrics = model_evaluation(name, model, X_test,y_test, path)
+        metrics = model_evaluation(name, model, x_test, y_test, path)
         metrics_list.append(metrics)
-        logging.info(f"Evaluated model '{name}' and saved results to '{path}'.")
+        logging.info("Evaluated model '%s' and saved results to '%s'.", name, path)
 
-    # Save metrics to CSV
     metrics_df = pd.DataFrame(metrics_list)
     metrics_csv_path = os.path.join(output_dir, "metrics.csv")
     metrics_df.to_csv(metrics_csv_path, index=False)
-    logging.info(f"Saved evaluation metrics to '{metrics_csv_path}'.")
+    logging.info("Saved evaluation metrics to '%s'.", metrics_csv_path)
 
-    # Save best parameters to CSV
     best_params_df = pd.DataFrame.from_dict(best_params, orient='index')
     best_params_csv_path = os.path.join(output_dir, "best_params.csv")
     best_params_df.to_csv(best_params_csv_path)
-    logging.info(f"Saved best hyperparameters to '{best_params_csv_path}'.")
+    logging.info("Saved best hyperparameters to '%s'.", best_params_csv_path)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate house pricing models.")
