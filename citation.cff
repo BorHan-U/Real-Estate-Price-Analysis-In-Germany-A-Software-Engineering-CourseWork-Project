@@ -23,7 +23,6 @@ authors:
   - given-name: Md Raju
     family-name: Ahmed
     email: ahmed10@uni-potsdam.de
-    name-particle: Md Raju
     affiliation: Universität Potsdam
 identifiers:
   - type: url
@@ -35,3 +34,5 @@ keywords:
   - python project
   - data analysis
 license: MIT
+
+To generate your CITATION.cff, don't hesitate to visit: https://shorturl.at/oqrKm
