@@ -20,10 +20,6 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 ## Handling Bugs
 If you find a bug, please report it by creating an issue in the GitLab Issue Tracker. If you are able to fix a bug, please fork the repository (if not a maintainer), create a new branch, apply your fix, and submit a merge request as outlined below.
 
-## Getting Started
-
-If you are not an active maintainer, please fork the official repository and clone the fork to your local machine. Active maintainers can create branches directly in the main repository.
-
 ## Clone the Repository
 
 Clone your forked repository to your local machine.
@@ -34,6 +30,10 @@ git clone https://github.com/sumon/real-estate-price-analysis.git
 In case of Fork the repository to your own GitHub account, It can be forked by clicking the "Fork" button on the top right of the repository page.
 
 For more instruction, you can also look into [README](README.md) file.
+
+## Getting Started
+
+If you are not an active maintainer, please fork the official repository and clone the fork to your local machine. Active maintainers can create branches directly in the main repository.
 
 ## Code Formatting
 
@@ -51,4 +51,6 @@ Please run make lint before submitting a merge request to ensure your code adher
 This project is licensed under the MIT License. See the [LICENSE](LICENSE.txt) file for details.
 
 ## Questions or Additional Help
-If you have any questions or require assistance, please use the GitLab Issue Tracker associated with this project. This is our preferred channel for communication regarding this project.
+If you have any questions or require assistance, please use the GitLab Issue Tracker associated with this project. This is our preferred channel for communication regarding this project or you can contact through our contact information channel given in the [readme file](README.md) at the end of the page.
+
+
