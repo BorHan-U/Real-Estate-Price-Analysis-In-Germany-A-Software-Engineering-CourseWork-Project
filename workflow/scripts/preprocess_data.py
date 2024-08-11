@@ -1,5 +1,6 @@
 """
-This script preprocesses house pricing data by cleaning and transforming it for further analysis.
+This script preprocesses house pricing data by
+cleaning and transforming it for further analysis.
 
 The preprocessing steps include:
 - Dropping unnecessary columns.
@@ -20,7 +21,8 @@ Arguments:
 - output_file: Path where the cleaned data will be saved.
 - output_dir: Directory where histogram plots will be saved.
 
-This script uses pandas for data manipulation and matplotlib for generating histograms.
+This script uses pandas for data manipulation
+and matplotlib for generating histograms.
 
 Example:
     python preprocess_script.py data/raw_data.csv data/cleaned_data.csv plots/
@@ -32,13 +34,23 @@ import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+sys.path.append(os.path.abspath(
+    os.path.join(
+        os.path.dirname(__file__), '../..')))
 
 from modules.count_null_data import count_null_data
-from modules.delete_columns_with_zero_data import delete_columns_with_zero_data
-from modules.separate_categorical_numerical import separate_categorical_numerical
-from modules.drop_columns_with_zero_threshold import drop_columns_with_zero_threshold
-from modules.apply_1_plus_log_transformation import apply_1_plus_log_transformation
+from modules.delete_columns_with_zero_data import (
+    delete_columns_with_zero_data
+    )
+from modules.separate_categorical_numerical import (
+    separate_categorical_numerical
+    )
+from modules.drop_columns_with_zero_threshold import (
+    drop_columns_with_zero_threshold
+    )
+from modules.apply_1_plus_log_transformation import (
+    apply_1_plus_log_transformation
+    )
 
 
 def preprocess_data(input_file, output_file, output_dir):
@@ -92,17 +104,23 @@ def preprocess_data(input_file, output_file, output_dir):
     numerical_data = numerical_data.drop(column_to_delete, axis=1)
 
     threshold_0 = 200
-    numerical_data = drop_columns_with_zero_threshold(numerical_data, threshold_0)
+    numerical_data = drop_columns_with_zero_threshold(
+        numerical_data, threshold_0
+        )
 
     numerical_data.hist(bins=50, xlabelsize=8, ylabelsize=8)
-    plt.savefig(os.path.join(output_dir, 'after_cleaning_numericalData_histogram_plot.png'))
+    plt.savefig(os.path.join(
+        output_dir, 'after_cleaning_numericalData_histogram_plot.png'))
     plt.close()
 
     columns_to_transform = ['1stFlrSF', 'GrLivArea', 'LotArea', 'SalePrice']
-    transformed_data = apply_1_plus_log_transformation(numerical_data, columns_to_transform)
+    transformed_data = apply_1_plus_log_transformation(
+        numerical_data, columns_to_transform
+        )
 
     transformed_data.hist(bins=50, xlabelsize=8, ylabelsize=8)
-    plt.savefig(os.path.join(output_dir, 'transformed_data_histogram_plot.png'))
+    plt.savefig(os.path.join(output_dir,
+                             'transformed_data_histogram_plot.png'))
     plt.close()
 
     # Save the preprocessed data
@@ -110,10 +128,16 @@ def preprocess_data(input_file, output_file, output_dir):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Preprocess house pricing data.")
-    parser.add_argument("input_file", type=str, help="Path to the input CSV file.")
-    parser.add_argument("output_file", type=str, help="Path to save the preprocessed CSV file.")
-    parser.add_argument("output_dir", type=str, help="Directory to save the plots.")
+    parser = argparse.ArgumentParser(
+        description="Preprocess house pricing data."
+        )
+    parser.add_argument("input_file",
+                        type=str, help="Path to the input CSV file.")
+    parser.add_argument("output_file",
+                        type=str, help="Path to save the preprocessed CSV file"
+                        )
+    parser.add_argument("output_dir",
+                        type=str, help="Directory to save the plots.")
     args = parser.parse_args()
 
     preprocess_data(args.input_file, args.output_file, args.output_dir)
