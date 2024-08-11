@@ -3,7 +3,8 @@ This module provides functionality to evaluate a trained model and save
 the predicted and actual values to a file.
 
 Functions:
-- model_evaluation: Evaluate a model and save the predicted and actual values to a file.
+- model_evaluation: Evaluate a model and save
+the predicted and actual values to a file.
 - main: Parses command-line arguments and evaluates the specified model.
 """
 
@@ -16,6 +17,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 class ModelEvaluationError(Exception):
     """Custom exception for errors during model evaluation."""
+
 
 def model_evaluation(name, model, x_test, y_test, output_file):
     """
@@ -50,20 +52,23 @@ def model_evaluation(name, model, x_test, y_test, output_file):
         raise ValueError("x_test and y_test must not be empty.")
 
     if len(x_test) != len(y_test):
-        raise ValueError("The number of samples in x_test and y_test must be the same.")
+        raise ValueError("The number of samples"
+                         "in x_test and y_test must be the same.")
 
     try:
         # Predict using the provided model
         y_pred = model.predict(x_test)
     except Exception as exc:
-        raise ModelEvaluationError(f"Error during model prediction: {exc}") from exc
+        raise ModelEvaluationError(f"Error"
+                                   f"during model prediction: {exc}") from exc
 
     try:
         # Calculate metrics
         mse = mean_squared_error(y_test, y_pred)
         r2 = r2_score(y_test, y_pred)
     except ValueError as exc:
-        raise ValueError(f"Error calculating evaluation metrics: {exc}") from exc
+        raise ValueError(f"Error calculating"
+                         f"evaluation metrics: {exc}") from exc
 
     # Store metrics in a dictionary
     metrics_dict = {
@@ -77,9 +82,11 @@ def model_evaluation(name, model, x_test, y_test, output_file):
         result = np.column_stack((y_pred, y_test))
         with open(output_file, "w", encoding="utf-8") as file:
             np.savetxt(file, result, fmt="%.2f", delimiter=",",
-                       header="Predicted,Actual", comments='')
+                       header="Predicted,Actual",
+                       comments='')
     except Exception as exc:
-        raise ModelEvaluationError(f"Error writing results to file: {exc}") from exc
+        raise ModelEvaluationError(f"Error writing"
+                                   f"results to file: {exc}") from exc
 
     return metrics_dict
 
@@ -96,7 +103,8 @@ def main():
         If the command-line arguments are invalid.
     """
     parser = argparse.ArgumentParser(
-        description="Evaluate a trained model and save predictions with true values."
+        description="Evaluate a trained model and"
+        "save predictions with true values."
     )
     parser.add_argument(
         "model_file", type=str,
@@ -112,7 +120,8 @@ def main():
     )
     parser.add_argument(
         "output_file", type=str,
-        help="Path to the output file where predictions and true values will be saved."
+        help="Path to the output file where predictions"
+        "and true values will be saved."
     )
     parser.add_argument(
         "--model_name", type=str, default="Model",
@@ -129,7 +138,8 @@ def main():
     y_test = pd.read_csv(args.y_test_file).values.flatten()
 
     # Evaluate the model
-    metrics = model_evaluation(args.model_name, model, x_test, y_test, args.output_file)
+    metrics = model_evaluation(args.model_name, model,
+                               x_test, y_test, args.output_file)
 
     # Print evaluation metrics
     print(f"Evaluation metrics for {args.model_name}:")

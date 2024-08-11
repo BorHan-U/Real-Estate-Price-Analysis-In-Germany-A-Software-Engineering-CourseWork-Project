@@ -12,10 +12,6 @@ import io
 from contextlib import redirect_stdout
 import pandas as pd
 import numpy as np
-
-# Add the parent directory of 'modules' to the Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from modules.count_null_data import count_null_data  # pylint: disable=wrong-import-position
 
 

@@ -19,9 +19,6 @@ from unittest.mock import patch
 import matplotlib
 matplotlib.use('Agg')
 
-# Add the parent directory of 'modules' to the Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from modules.plot_boxplot import plot_boxplot, PlotSaveError
 
 

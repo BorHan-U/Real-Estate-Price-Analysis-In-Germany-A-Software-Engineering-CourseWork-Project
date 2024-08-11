@@ -15,9 +15,6 @@ import sys
 import os
 import tempfile
 
-# Add the parent directory of 'modules' to the Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from modules.model_evaluation import model_evaluation, ModelEvaluationError
 
 

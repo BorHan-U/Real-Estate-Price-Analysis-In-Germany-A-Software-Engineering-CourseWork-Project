@@ -9,16 +9,11 @@ including edge cases and error handling.
 import unittest
 import pandas as pd
 import numpy as np
-import sys
 import os
 import tempfile
 import json
 from io import StringIO
 from unittest.mock import patch
-
-# Add the parent directory of 'modules' to the Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from modules.separate_categorical_numerical import separate_categorical_numerical, main
 
 
@@ -39,8 +34,7 @@ class TestSeparateCategoricalNumerical(unittest.TestCase):
             'C': [4.5, 5.5, 6.5],
             'D': [True, False, True]
         })
-        categorical_cols, numerical_cols = separate_categorical_numerical(data)
-        self.assertEqual(set(categorical_cols), {'B', 'D'})
+        numerical_cols = separate_categorical_numerical(data)
         self.assertEqual(set(numerical_cols), {'A', 'C'})
 
     def test_all_numerical(self):
@@ -50,20 +44,9 @@ class TestSeparateCategoricalNumerical(unittest.TestCase):
             'B': [4.5, 5.5, 6.5],
             'C': [7, 8, 9]
         })
-        categorical_cols, numerical_cols = separate_categorical_numerical(data)
-        self.assertEqual(categorical_cols, [])
+        numerical_cols = separate_categorical_numerical(data)
         self.assertEqual(set(numerical_cols), {'A', 'B', 'C'})
 
-    def test_all_categorical(self):
-        """Test with all categorical columns."""
-        data = pd.DataFrame({
-            'A': ['X', 'Y', 'Z'],
-            'B': [True, False, True],
-            'C': ['cat', 'dog', 'bird']
-        })
-        categorical_cols, numerical_cols = separate_categorical_numerical(data)
-        self.assertEqual(set(categorical_cols), {'A', 'B', 'C'})
-        self.assertEqual(numerical_cols, [])
 
     def test_empty_dataframe(self):
         """Test with an empty DataFrame."""
@@ -80,8 +63,7 @@ class TestSeparateCategoricalNumerical(unittest.TestCase):
     def test_single_column(self):
         """Test with a single column DataFrame."""
         data = pd.DataFrame({'A': [1, 2, 3]})
-        categorical_cols, numerical_cols = separate_categorical_numerical(data)
-        self.assertEqual(categorical_cols, [])
+        numerical_cols = separate_categorical_numerical(data)
         self.assertEqual(numerical_cols, ['A'])
 
     def test_mixed_numeric_types(self):
@@ -91,8 +73,7 @@ class TestSeparateCategoricalNumerical(unittest.TestCase):
             'B': [4.5, 5.5, 6.5],
             'C': np.array([7, 8, 9], dtype=np.int64)
         })
-        categorical_cols, numerical_cols = separate_categorical_numerical(data)
-        self.assertEqual(categorical_cols, [])
+        numerical_cols = separate_categorical_numerical(data)
         self.assertEqual(set(numerical_cols), {'A', 'B', 'C'})
 
     def test_categorical_as_numeric(self):
@@ -102,8 +83,7 @@ class TestSeparateCategoricalNumerical(unittest.TestCase):
             'B': pd.Categorical([1, 2, 3]),
             'C': [4.5, 5.5, 6.5]
         })
-        categorical_cols, numerical_cols = separate_categorical_numerical(data)
-        self.assertEqual(categorical_cols, ['B'])
+        numerical_cols = separate_categorical_numerical(data)
         self.assertEqual(set(numerical_cols), {'A', 'C'})
 
     def test_datetime_column(self):
@@ -113,8 +93,7 @@ class TestSeparateCategoricalNumerical(unittest.TestCase):
             'B': pd.date_range('2023-01-01', periods=3),
             'C': [4.5, 5.5, 6.5]
         })
-        categorical_cols, numerical_cols = separate_categorical_numerical(data)
-        self.assertEqual(categorical_cols, ['B'])
+        numerical_cols = separate_categorical_numerical(data)
         self.assertEqual(set(numerical_cols), {'A', 'C'})
 
     @patch('sys.stdout', new_callable=StringIO)
@@ -125,8 +104,7 @@ class TestSeparateCategoricalNumerical(unittest.TestCase):
             'B': [complex(1, 2), complex(3, 4), complex(5, 6)],
             'C': [4.5, 5.5, 6.5]
         })
-        categorical_cols, numerical_cols = separate_categorical_numerical(data)
-        self.assertEqual(categorical_cols, [])
+        numerical_cols = separate_categorical_numerical(data)
         self.assertEqual(set(numerical_cols), {'A', 'C'})
         self.assertIn("Column 'B' has an unrecognized data type", mock_stdout.getvalue())
 
@@ -136,32 +114,21 @@ class TestSeparateCategoricalNumerical(unittest.TestCase):
             temp_csv.write("A,B,C\n1,X,4.5\n2,Y,5.5\n3,Z,6.5\n")
             temp_csv_name = temp_csv.name
 
-        with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json') as temp_cat:
-            temp_cat_name = temp_cat.name
-
         with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json') as temp_num:
             temp_num_name = temp_num.name
 
         test_args = [
             'separate_categorical_numerical.py',
             temp_csv_name,
-            '--output_categorical', temp_cat_name,
             '--output_numerical', temp_num_name
         ]
-
         with patch('sys.argv', test_args):
             main()
 
-        with open(temp_cat_name, 'r') as f:
-            cat_cols = json.load(f)
         with open(temp_num_name, 'r') as f:
             num_cols = json.load(f)
-
-        self.assertEqual(cat_cols, ['B'])
         self.assertEqual(set(num_cols), {'A', 'C'})
-
         os.unlink(temp_csv_name)
-        os.unlink(temp_cat_name)
         os.unlink(temp_num_name)
 
 

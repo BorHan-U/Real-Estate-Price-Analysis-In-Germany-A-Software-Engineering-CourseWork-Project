@@ -9,12 +9,6 @@ including edge cases and unexpected inputs.
 import unittest
 import pandas as pd
 import numpy as np
-import sys
-import os
-
-# Add the parent directory of 'modules' to the Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from modules.drop_columns_with_zero_threshold import drop_columns_with_zero_threshold
 
 
