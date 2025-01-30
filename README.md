@@ -1,10 +1,11 @@
-# Research Software Engineering Group Project 2
+# Real Estate Price Analysis
+## A Corsework Group Project for 'Research Software Engineering - Course' with the Collaboration of GIT.
 
 The project (Real Estate Price Analysis) aims to analysis of house price data and develop a machine learning model to predict the real estate (housing) prices while using several input parameters as the base for our prediction.
 
 This research project was worked on during the group project part of the course **Research Software Engineering**.
 
-Authors: Aijaz Afzaal Ahmed, Jayed Akbar Sumon, Md Borhan Uddin, Mohammad Hasan, Md Raju Ahmed
+Authors: Md Borhan Uddin, Aijaz Afzaal Ahmed, Jayed Akbar Sumon, Mohammad Hasan, Md Raju Ahmed
 
 ## Table of contents
 - [Introduction](#introduction)
