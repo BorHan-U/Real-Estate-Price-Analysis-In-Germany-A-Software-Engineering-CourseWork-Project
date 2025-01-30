@@ -1,5 +1,5 @@
 # Real Estate Price Analysis
-## A Corsework Group Project for 'Research Software Engineering - Course' with the Collaboration of GIT.
+## A Corsework Project for 'Research Software Engineering - Course' with the Collaboration of GIT.
 
 The project (Real Estate Price Analysis) aims to analysis of house price data and develop a machine learning model to predict the real estate (housing) prices while using several input parameters as the base for our prediction.
 
